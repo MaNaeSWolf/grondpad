@@ -16,14 +16,20 @@ through the same **+ Add a card** button:
 | **Day score** | Tallies every card you logged, worth more as each chain lengthens | one |
 | **Mood** | 1–10 scale with an optional line on why | one |
 | **Journal** | Somewhere to write, with a prompt when you need one | one |
-| **Talk** | Reflection companion that knows your recent context | one |
+| **Talk** | Reflection companion — **parked, see below** | one |
 
 Every card collapses and expands. Collapsed, a Mood card is just the slider — releasing
 it logs the day. Expanded, it adds the note, the 30-day trace, and its calendar.
 
 **Each card carries its own history.** Tap a day in a card's month grid to read what was
-there: that day's mood and note, the entries you filed, the conversation you had. There
-is no separate history screen — history belongs to the thing that recorded it.
+there: that day's mood and note, or the entries you filed. There is no separate history
+screen — history belongs to the thing that recorded it.
+
+The grid reaches back as far as that card has actually logged, and not one column
+further: it opens anchored on today, scrolls back through real months, and stops where
+the data does. Scrolling through empty months to confirm they are empty is not history.
+A Mood grid is coloured by the mood itself, clay through sage, so you can find the week
+you are looking for by its shape rather than by reading dates.
 
 Card management — renaming, reordering, removing — lives behind **Manage** in the header.
 
@@ -90,16 +96,24 @@ unreadable.**
 The token cannot be hidden in a browser app. The blast radius is bounded instead: it is
 scoped to one private repo that contains nothing but ciphertext.
 
-## The companion
+## The companion — parked
 
-The Talk tab is **off until you give it an endpoint**. The original called
-`api.anthropic.com` directly from the page, which 401'd on every send; a key placed in
-this file would be readable by anyone who opens the page, and it is served from GitHub
-Pages. So the request goes to a URL you host that holds the key server-side.
+The Talk card is **not built yet**. It appears greyed in the picker and cannot be added;
+any existing Talk card renders inert and says so.
 
-Set it under **Manage → Manage sync → Companion endpoint**. It should accept
-`{context, messages}` and return `{text}`. Until then the tab explains itself rather
-than failing with a misleading connection error.
+It is parked rather than deleted because the remaining work is real and separate: it
+needs a hosted endpoint holding an API key, plus the brief that preloads the model with
+recent moods and entries. The original called `api.anthropic.com` straight from the
+page, which 401'd on every send — and a key placed in this file would be readable by
+anyone who opens it, since the page is served from GitHub Pages.
+
+The card code is written and tested. To turn it back on: remove `'talk'` from `PARKED`
+in `index.html`, then set the endpoint under **Manage → Manage sync → Companion
+endpoint**. It should accept `{context, messages}` and return `{text}`.
+
+While parked, Talk counts as **inert** — like the day score, it is skipped by scoring
+and by perfect-day checks, so a Talk card sitting in the stack cannot make a clean day
+impossible.
 
 ## Local development
 

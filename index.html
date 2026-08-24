@@ -411,6 +411,22 @@
   .composer{display:flex;gap:8px;align-items:flex-end}
   .cInput{resize:none;min-height:44px;max-height:140px}
   .composer .btnP{flex-shrink:0;height:44px;padding:0 18px}
+
+  /* Parked: present, legible, obviously not live. Dashed rather than faded so it does
+     not read as merely low-contrast. */
+  .segBtn.parked{opacity:.45;cursor:default;border-style:dashed;
+    display:flex;align-items:center;justify-content:center;gap:6px}
+  .segBtn.parked:hover{background:var(--bg)}
+  .soon{font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--soft);
+    border:1px solid var(--faint);border-radius:999px;padding:1px 6px;white-space:nowrap}
+  .row.panel.parkedCard{border-style:dashed;background:transparent}
+  .row.panel.parkedCard .hname{color:var(--soft)}
+
+  /* A long grid scrolls. Fading the left edge is the only cue that there is more behind
+     it, since the container has no visible scrollbar on a phone. */
+  .gridWrap{scroll-behavior:auto;-webkit-overflow-scrolling:touch;
+    -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 14px);
+    mask-image:linear-gradient(90deg,transparent 0,#000 14px)}
 </style>
 </head>
 <body>
@@ -893,10 +909,19 @@ const isMood    = h => h.type === 'mood';
 const isJournal = h => h.type === 'journal';
 const isTalk    = h => h.type === 'talk';
 
-/* INERT cards display something and record nothing. They hold no days{}, so they are
-   skipped by the score, by perfect-day checks and by every "did you do everything
-   today" test — a card you cannot log must never be able to break a clean day. */
-const isInert = h => isScore(h);
+/* Parked types: shown in the picker, greyed, not selectable. Talk needs a hosted
+   endpoint holding an API key plus the brief that preloads it with recent context,
+   which is real work and is not scheduled yet. The card code is written and tested —
+   remove 'talk' from this list and it comes back on. */
+const PARKED = ['talk'];
+
+/* INERT cards display something and record nothing. They are skipped by the score, by
+   perfect-day checks and by every "did you do everything today" test — a card you
+   cannot log must never be able to break a clean day.
+
+   Parked types count as inert for exactly that reason: a Talk card left in the stack
+   while the companion is unbuilt would otherwise make a clean day impossible forever. */
+const isInert = h => isScore(h) || PARKED.indexOf(h.type) > -1;
 
 /* PANEL cards are the reflection layer: they record a day like a habit does, but their
    own content is the point and the chain is secondary, so their week and month views
@@ -1775,6 +1800,24 @@ const DOW_SHORT = ['M','T','W','T','F','S','S'];
 const DOW_FULL  = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
 const dowCol = () => '<div class="dowCol">'+DOW_SHORT.map(d=>'<span>'+d+'</span>').join('')+'</div>';
 
+/* How far back the grid reaches. It used to be a flat 18 columns for everybody, which
+   meant a year of journal entries was there in the data and unreachable on screen.
+
+   The window now grows to cover whatever the card has actually logged, and not one
+   column further: scrolling back through empty months to confirm they are empty is not
+   history, it is just a longer nothing. GRID_MIN keeps a new card from drawing a stub,
+   and GRID_MAX is a guard on a nonsense date (a backfill typed as 1999) blowing the DOM
+   up to thousands of columns. */
+const GRID_MIN = 18;            // ~4 months, the original fixed window
+const GRID_MAX = 314;           // ~6 years
+
+function gridWeeks(h){
+  const start = habitStart(h);
+  if (!start) return GRID_MIN;
+  const weeksBack = Math.ceil((mondayOf(midnight()) - mondayOf(start)) / 604800000);
+  return Math.max(GRID_MIN, Math.min(weeksBack + 1, GRID_MAX));
+}
+
 function fullGrid(h){
   const end = midnight();
   const dow = (end.getDay() + 6) % 7;              // 0 = Monday
@@ -1782,7 +1825,7 @@ function fullGrid(h){
   weekEnd.setDate(end.getDate() + (6 - dow));
 
   const weeks = [];
-  for (let w=17; w>=0; w--){
+  for (let w=gridWeeks(h)-1; w>=0; w--){
     const col = [];
     for (let r=0; r<7; r++){
       const d = new Date(weekEnd);
@@ -1796,6 +1839,14 @@ function fullGrid(h){
   // Time habits are banded like counters here - the month grid is colour-only, so it
   // needs the good-to-less-good scale, not the toggle's flat green.
   const graded = isCounter(h) || isTime(h), col = graded ? counterScale(h) : null;
+
+  /* A mood grid is coloured by the mood itself, clay through sage, rather than the
+     toggle's flat green. Scanning months for "the week everything was grey" is how you
+     actually find a day worth re-reading — a uniform green wall tells you nothing. */
+  const moodCell = d => {
+    const k = keyFor(d);
+    return h.days[k] !== undefined ? moodHue(h.days[k]) : shade(h, d);
+  };
 
   // Label the first column of each month. Suppress a label whose month is only a
   // narrow sliver at the left edge (fewer than 3 week-columns before the next month),
@@ -1820,14 +1871,14 @@ function fullGrid(h){
     const sel = (dayEdit && dayEdit.id===h.id && dayEdit.key===k) ? ' sel'
       : (daySel && daySel.key===k) ? ' selDay' : '';
     const cls = 'cell'+(future?' future':'')+(k===today?' today':'')+((data.paused && data.paused[k])?' paused':'')+(has(h.days,k)?' marked':'')+sel;
-    const bg  = graded ? col(d) : shade(h,d);
+    const bg  = isMood(h) ? moodCell(d) : graded ? col(d) : shade(h,d);
     const act = 'openDay('+h.id+',\''+k+'\')';
     return '<div class="'+cls+'" style="background:'+bg+'"'+(future ? '' :
       ' role="button" tabindex="0" aria-label="Edit '+k+'" onclick="'+act+'"'+
       ' onkeydown="if(event.key===\'Enter\'||event.key===\' \'){event.preventDefault();'+act+'}"')+'></div>';
   }).join('') + '</div>').join('');
 
-  return '<div class="gridWrap"><div class="gridIn">'+
+  return '<div class="gridWrap" data-card="'+h.id+'"><div class="gridIn">'+
     '<div class="months"><div class="mSpace"></div>'+months+'</div>'+
     '<div class="weeks">'+dowCol()+cols+'</div>'+
     '</div></div>';
@@ -2560,8 +2611,13 @@ const dirBtn = (d, label) =>
     'onclick="setFormDir(\''+d+'\')">'+label+'</button>';
 
 const segBtn = (t, label) =>
-  '<button type="button" class="segBtn'+((form.type||'toggle')===t?' on':'')+'" '+
-    'onclick="setFormType(\''+t+'\')">'+label+'</button>';
+  PARKED.indexOf(t) > -1
+    // Shown but not selectable. Hiding it would suggest the idea was dropped; greyed
+    // out says it is coming and is honest about it not working yet.
+    ? '<button type="button" class="segBtn parked" disabled '+
+        'title="Not built yet">'+label+'<span class="soon">soon</span></button>'
+    : '<button type="button" class="segBtn'+((form.type||'toggle')===t?' on':'')+'" '+
+        'onclick="setFormType(\''+t+'\')">'+label+'</button>';
 
 function typeHint(t){
   return t==='plus' ? 'Tap + each time (e.g. a glass of water). Cells are tinted by your 7-day average.'
@@ -2571,7 +2627,7 @@ function typeHint(t){
     : t==='score' ? 'One computed card that tallies every card you logged each day, worth more as each chain lengthens. Nothing to tick — only one allowed.'
     : t==='mood' ? 'A 1–10 scale with an optional line on why. Releasing the slider logs the day; the score itself does not change your points, so an honest 2 counts as much as a 9. One only.'
     : t==='journal' ? 'Somewhere to write, with a prompt when you have nothing to say. Writing an entry logs the day. Tap a day in its calendar to read what you wrote. One only.'
-    : t==='talk' ? 'A reflection companion that already knows your recent moods and entries. Talking to it logs the day. Needs an endpoint — see Manage sync. One only.'
+    : t==='talk' ? 'A reflection companion preloaded with your recent moods and entries. Not built yet — it needs a hosted endpoint holding the API key, which is a job of its own.'
     : 'A simple daily tick. Builds streaks, milestones and the warming background.';
 }
 
@@ -2601,7 +2657,7 @@ function editorHTML(title){
         (allow('score')   ? segBtn('score','Day score') : '')+
         (allow('mood')    ? segBtn('mood','Mood') : '')+
         (allow('journal') ? segBtn('journal','Journal') : '')+
-        (allow('talk')    ? segBtn('talk','Talk') : '')+
+        segBtn('talk','Talk')+                    // parked — always shown, always greyed
       '</div>'+
       '<p class="hint">'+typeHint(form.type)+'</p>'+
       ((eh && famOf(eh.type||'toggle') !== famOf(form.type) && Object.keys(eh.days||{}).length)
@@ -3051,12 +3107,23 @@ function talkRow(h){
   const draft = drafts[h.id] || '';
   const log = h.chat || [];
 
-  if (!sync.aiProxy){
-    return panelShell(h,
-      '<p class="jHint" style="line-height:1.65;margin:0">The companion needs an endpoint '+
-      'before it can answer. A key placed in this file would be readable by anyone who '+
-      'opens the page, so the request has to go through a URL you host. Set it under '+
-      '<b>Manage → Manage sync</b>.</p>');
+  /* Parked. The card renders greyed and inert rather than disappearing — a card someone
+     already added should not silently vanish, and the state is honest about why. */
+  if (PARKED.indexOf('talk') > -1 || !sync.aiProxy){
+    return '<div class="row panel parkedCard">'+
+      '<div class="top">'+
+        '<span class="pmark flat" aria-hidden="true"></span>'+
+        '<div class="nameBtn static">'+
+          '<div class="nameLine"><span class="hname">'+esc(h.name)+'</span>'+
+            '<span class="soon">not built yet</span></div>'+
+          '<div class="streak">Parked</div>'+
+        '</div>'+
+      '</div>'+
+      '<div class="pbody"><p class="jHint" style="margin:0;line-height:1.6">'+
+        'The companion needs a hosted endpoint holding the API key, and the brief that '+
+        'preloads it with your recent context. Until that exists this card does nothing.'+
+      '</p></div>'+
+    '</div>';
   }
 
   // Collapsed shows the tail of the conversation; expanded shows all of it.
@@ -3348,6 +3415,27 @@ function render(){
   const f = document.getElementById('fName');
   if (f && !f.value) f.focus();
   placePeek();
+  anchorGrids();
+}
+
+/* A grid that reaches back a year opens on last January unless told otherwise, because
+   a scroll container starts at its left edge. Today is the useful end, so every grid is
+   pinned right after each paint — except one the user has already scrolled, which would
+   be yanked out from under them on the next render. */
+const gridScroll = {};
+function anchorGrids(){
+  document.querySelectorAll('.gridWrap').forEach(el => {
+    const id = el.getAttribute('data-card');
+    el.scrollLeft = (id && gridScroll[id] !== undefined) ? gridScroll[id] : el.scrollWidth;
+    if (!el._bound){
+      el._bound = true;
+      el.addEventListener('scroll', () => {
+        // At the right edge, forget the position so it keeps tracking today as days pass.
+        const atEnd = el.scrollWidth - el.clientWidth - el.scrollLeft < 4;
+        if (atEnd) delete gridScroll[id]; else gridScroll[id] = el.scrollLeft;
+      }, { passive:true });
+    }
+  });
 }
 
 /* A bubble centred on its own day runs off the card at the first and last few slots -
