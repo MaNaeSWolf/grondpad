@@ -1,18 +1,31 @@
 # Grondpad
 
-A private daily check-in app: mood, habits, a prompted journal, a merged history, and a
-reflection companion. Single-file HTML PWA — no build step, no dependencies, no server.
-Runs from a phone home screen and syncs an encrypted blob to a private GitHub repo.
+A private daily check-in app you assemble yourself. Single-file HTML PWA — no build
+step, no dependencies, no server. Runs from a phone home screen and syncs an encrypted
+blob to a private GitHub repo.
 
-| Tab | What it does |
-| --- | --- |
-| **Today** | Mood check-in (1–10 plus a note), then the habit rows with streaks |
-| **Journal** | Free writing, or one of twelve rotating reflection prompts |
-| **History** | 30-day mood trace, then every logged day in full — mood, ticks and entries on one card |
-| **Talk** | Reflection companion with recent context (needs an endpoint, see below) |
+There are no tabs and no fixed screens. There is **one scrollable stack of cards**, in
+whatever order you arrange them, and you choose which cards exist. Everything is added
+through the same **+ Add a card** button:
 
-Habit management lives behind **Manage** in the header, where Bloupunt put it, rather
-than taking a fifth tab slot.
+| Card | What it does | How many |
+| --- | --- | --- |
+| **Tick** | A simple daily tick. Streaks, milestones, the warming background | any |
+| **Count + / − / ±** | Tap to count something up, down, or both | any |
+| **Time of day** | Logs the first time something happened | any |
+| **Day score** | Tallies every card you logged, worth more as each chain lengthens | one |
+| **Mood** | 1–10 scale with an optional line on why | one |
+| **Journal** | Somewhere to write, with a prompt when you need one | one |
+| **Talk** | Reflection companion that knows your recent context | one |
+
+Every card collapses and expands. Collapsed, a Mood card is just the slider — releasing
+it logs the day. Expanded, it adds the note, the 30-day trace, and its calendar.
+
+**Each card carries its own history.** Tap a day in a card's month grid to read what was
+there: that day's mood and note, the entries you filed, the conversation you had. There
+is no separate history screen — history belongs to the thing that recorded it.
+
+Card management — renaming, reordering, removing — lives behind **Manage** in the header.
 
 ## Credit and provenance
 
@@ -39,18 +52,29 @@ reference/original-App.jsx Cora's original React component, unmodified
 
 ### Data
 
-Everything lives in one `grondpad-data` object in `localStorage`:
+Everything lives in one `grondpad-data` object in `localStorage`. **A card is a card**,
+whatever its type — a habit, the day score, the mood scale and the journal are all one
+kind of object in a single `cards[]` array:
 
-| Key | Shape | Meaning |
-| --- | --- | --- |
-| `habits[]` | `{id, name, type, cue, days{}, mAt}` | Bloupunt's model, all six habit types |
-| `mood{}` | `dayKey -> {score, note, mAt}` | one check-in per day, editable |
-| `journal[]` | `{id, date, prompt, text, mAt}` | newest first |
-| `gone{}` / `jgone{}` | `id -> timestamp` | deletion tombstones |
+```js
+{ id, name, type, days:{}, mAt,   // every card
+  notes:{},                        // mood — dayKey -> the line you wrote
+  entries:[], gone:{},             // journal — entries + their tombstones
+  chat:[] }                        // talk — capped transcript
+```
 
-Every field rides the same encrypted blob and the same union merge, so a day written on
+`days{}` is the whole trick. **Presence means "engaged today"**, so a mood check-in, a
+journal entry and a habit tick are indistinguishable to the scoring code — they all flow
+through the same `chainRun` with no special-casing. Logging is the unit and the value is
+ignored: a 1/10 day scores exactly as much as a 10/10 one, because being penalised for
+honestly recording a bad day is how people stop recording.
+
+Cards that only display (the day score) hold no `days{}` and are skipped everywhere.
+
+Every card rides the same encrypted blob and the same union merge, so a day written on
 the phone is never lost to a later write from the desktop. Where two devices genuinely
-disagree about one value, the newer `mAt` stamp wins.
+disagree about one value, the newer `mAt` stamp wins. A Bloupunt backup — which carries
+`habits[]` rather than `cards[]` — imports here as a stack of habit cards.
 
 ### Sync
 

@@ -8,7 +8,7 @@
    │ the updated shell. Forget it and phones keep serving the old page. │
    └──────────────────────────────────────────────────────────────────┘ */
 
-const VERSION = 'grondpad-v1';
+const VERSION = 'grondpad-v3';
 const CORE = ['./', './index.html'];
 
 self.addEventListener('install', e => {

@@ -328,7 +328,7 @@
     .tab.on::after{transition:none}
   }
 
-  /* ═══════════ REFLECTION LAYER ═══════════ */
+  /* ═══════════ REFLECTION CARDS ═══════════ */
 
   textarea{font-family:inherit;width:100%;border:1px solid var(--faint);border-radius:12px;
     padding:11px 13px;font-size:16px;color:var(--ink);background:var(--bg);resize:vertical;
@@ -336,73 +336,81 @@
   textarea::placeholder{color:#BFB9B0}
   textarea:focus-visible{outline:2px solid var(--sage);outline-offset:2px}
 
-  /* Bottom nav is fixed, so the page needs room under it or the last card hides behind. */
-  #app{padding-bottom:96px}
-  .tabs{position:fixed;left:0;right:0;bottom:0;z-index:20;display:flex;justify-content:center;
-    gap:2px;background:rgba(255,255,255,.92);backdrop-filter:blur(12px);
-    border-top:1px solid var(--hair);
-    padding:7px 8px calc(7px + env(safe-area-inset-bottom))}
-  .tab{position:relative;background:none;border-radius:10px;padding:9px 15px;font-size:13px;
-    font-weight:500;color:var(--soft);letter-spacing:.01em}
-  .tab.on{color:var(--sageDeep);font-weight:600}
-  .tab.on::after{content:'';position:absolute;left:50%;transform:translateX(-50%);bottom:3px;
-    width:16px;height:2px;border-radius:2px;background:var(--sageDeep)}
+  /* Ten card types will not fit three-to-a-row legibly, and the picker is now the way
+     you add anything at all — it earns the height. */
+  .picker.wide .segBtn{flex:1 1 30%;padding:13px 8px;font-size:13px;line-height:1.3;
+    border-radius:13px}
 
-  .moodRow{padding:17px 18px 16px}
-  .moodHead{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:14px}
-  .moodLbl{font-size:15px;font-weight:600}
-  .moodVal{font-size:13px;font-variant-numeric:tabular-nums;font-weight:500}
-  /* --fill and --pct are set per-render, so the filled portion of the track carries the
-     mood colour and stops at the thumb rather than tinting the whole bar. */
+  /* A panel's header matches a habit row, but the mark is a state, not a control:
+     these cards are logged by being used. */
+  .row.panel .top{align-items:flex-start}
+  .pmark{width:26px;height:26px;border-radius:9px;flex-shrink:0;display:flex;
+    align-items:center;justify-content:center;background:var(--bg);
+    border:1.5px solid var(--faint);color:#fff;margin-top:1px}
+  .pmark.on{background:var(--sage);border-color:var(--sage)}
+  .pmark.flat{border-style:dashed;background:transparent}
+  .nameBtn.static{flex:1;min-width:0;text-align:left;background:none;border:none;padding:0}
+  .pbody{margin-top:13px}
+  .row.panel .exp{margin-top:14px}
+
+  .moodHead{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:13px}
+  .moodVal{font-size:14px;font-variant-numeric:tabular-nums;font-weight:600}
+  .moodNudge{font-size:11px;color:var(--soft);letter-spacing:.04em}
+  /* --fill and --pct are set per-render, so the filled portion carries the mood colour
+     and stops at the thumb rather than tinting the whole bar. */
   .moodSlider{-webkit-appearance:none;appearance:none;width:100%;height:5px;border-radius:3px;
     background:linear-gradient(90deg,var(--fill) 0%,var(--fill) var(--pct),
       var(--faint) var(--pct),var(--faint) 100%);
-    margin:0 0 15px;padding:0;border:none}
-  .moodSlider::-webkit-slider-thumb{-webkit-appearance:none;width:27px;height:27px;
+    margin:0;padding:0;border:none}
+  .moodSlider::-webkit-slider-thumb{-webkit-appearance:none;width:28px;height:28px;
     border-radius:50%;background:var(--sageDeep);border:3px solid var(--card);
     box-shadow:0 1px 5px rgba(0,0,0,.22);cursor:grab}
-  .moodSlider::-moz-range-thumb{width:21px;height:21px;border-radius:50%;
+  .moodSlider::-moz-range-thumb{width:22px;height:22px;border-radius:50%;
     background:var(--sageDeep);border:3px solid var(--card);
     box-shadow:0 1px 5px rgba(0,0,0,.22);cursor:grab}
   .moodSlider::-moz-range-track{height:5px;border-radius:3px;background:var(--faint)}
-  .moodSave{width:100%;margin-top:13px}
+  .moodNote{margin-top:13px}
 
-  .jPrompt{font-size:16px;line-height:1.45;color:var(--clay);margin-bottom:11px}
-  .jHint{font-size:13px;color:var(--soft);margin-bottom:11px}
-  .jText{margin-bottom:0}
-  .jBtns{display:flex;gap:10px;margin-top:12px}
+  .jPrompt{font-size:15px;line-height:1.45;color:var(--clay);margin-bottom:10px}
+  .jHint{font-size:13px;color:var(--soft);margin-bottom:10px}
+  .jBtns{display:flex;gap:9px;margin-top:11px}
   .jBtns>button{flex:1;padding-left:0;padding-right:0}
-  .jTop{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:2px}
+  .jList{display:flex;flex-direction:column;gap:11px;margin-bottom:14px}
+  .jEntry{border-left:3px solid var(--clay);padding-left:11px}
+  .jTop{display:flex;justify-content:space-between;align-items:center;gap:10px}
   .jDate{font-size:12px;color:var(--soft);font-variant-numeric:tabular-nums}
   .jConfirm{font-size:12px;color:var(--soft);display:flex;align-items:center;gap:7px}
-  .jEntryPrompt{font-size:14px;line-height:1.4;color:var(--clay);margin:7px 0 0}
-  .jBody{font-size:15px;line-height:1.6;margin-top:8px;white-space:pre-wrap;overflow-wrap:anywhere}
+  .jEntryPrompt{font-size:13px;line-height:1.4;color:var(--clay);margin:0 0 4px}
+  .jBody{font-size:15px;line-height:1.6;margin:0;white-space:pre-wrap;overflow-wrap:anywhere}
 
-  .statRow{display:flex;gap:26px;margin-bottom:14px}
+  .trace{margin-bottom:16px}
+  .statRow{display:flex;gap:26px;margin-bottom:12px}
   .statLbl{font-size:10px;letter-spacing:.16em;color:var(--soft);margin-bottom:2px}
   .statVal{font-size:25px;line-height:1}
   .sage{color:var(--sageDeep)}
-  /* Fixed aspect so the non-uniform viewBox scale is predictable across phone widths. */
-  .chart{display:block;width:100%;height:150px}
+  /* Fixed height so the non-uniform viewBox scale is predictable across phone widths. */
+  .chart{display:block;width:100%;height:135px}
   .chartAx{display:flex;justify-content:space-between;font-size:10px;color:var(--soft);
     margin-top:5px;font-variant-numeric:tabular-nums}
-  .secHead{font-size:18px;font-weight:400;margin:20px 0 -2px}
-  .dayTicks{font-size:13px;color:var(--soft);margin-top:9px;line-height:1.55}
-  .dayEntry{border-left:3px solid var(--clay);padding-left:11px;margin-top:11px}
 
-  .talkWrap{min-height:56vh}
-  .chat{display:flex;flex-direction:column;gap:9px}
+  /* The day chip as an archive rather than a control. */
+  .chip.read{display:block}
+  .chipRead{margin-top:9px;display:flex;flex-direction:column;gap:9px;align-items:flex-start}
+  .chipScore{font-size:15px;font-weight:600;font-variant-numeric:tabular-nums}
+  .chipEmpty{font-size:13px;color:var(--soft);line-height:1.55}
+
+  .chat{display:flex;flex-direction:column;gap:8px;margin-bottom:12px}
   .bWrap{display:flex}
   .bWrap.me{justify-content:flex-end}
   .bWrap.it{justify-content:flex-start}
-  .bubble{max-width:85%;padding:10px 14px;font-size:15px;line-height:1.55;white-space:pre-wrap;
-    overflow-wrap:anywhere;border-radius:16px}
+  .bubble{max-width:86%;padding:9px 13px;font-size:15px;line-height:1.55;white-space:pre-wrap;
+    overflow-wrap:anywhere;border-radius:15px}
   .me .bubble{background:var(--sage);color:#fff;border-bottom-right-radius:5px}
-  .it .bubble{background:var(--card);border:1px solid var(--hair);border-bottom-left-radius:5px}
+  .it .bubble{background:var(--bg);border:1px solid var(--hair);border-bottom-left-radius:5px}
   .chatErr{font-size:13px;color:var(--clay);margin-top:4px}
-  .composer{display:flex;gap:8px;align-items:flex-end;margin-top:14px}
+  .composer{display:flex;gap:8px;align-items:flex-end}
   .cInput{resize:none;min-height:44px;max-height:140px}
-  .composer .btnP{flex-shrink:0;height:44px}
+  .composer .btnP{flex-shrink:0;height:44px;padding:0 18px}
 </style>
 </head>
 <body>
@@ -483,21 +491,52 @@ function windowDays(n){
 
 /* Grondpad extends Bloupunt's habit state with the reflection layer:
      mood{}    dayKey -> { score, note, mAt }   one check-in per day, editable
-     journal[] { id, date, prompt, text, mAt }  newest first
-     jgone{}   journal id -> deletion stamp     tombstones, same contract as gone{}
-   Every one of these rides the same encrypted blob and the same union merge, so a
-   day written on the phone is never lost to a later write from the desktop. */
-let data = { habits: [], seen: {}, paused: {}, gone: {},
-             mood: {}, journal: [], jgone: {}, updatedAt: 0 };
+     — every card is one entry in cards[], whatever its type. A habit, the day score,
+     the mood scale and a journal are all the same kind of object: {id, type, days{}}.
+     That is what lets mood and journal score through the identical chainRun path as a
+     habit, with no special-casing anywhere in the points logic.
+
+     Cards that record something carry days{} where PRESENCE means "engaged today".
+     Cards that only display (score, history) carry none and are skipped by the score.
+
+   Every card rides the same encrypted blob and the same union merge, so a day written
+   on the phone is never lost to a later write from the desktop. */
+let data = { cards: [], seen: {}, paused: {}, gone: {}, updatedAt: 0 };
 try {
   const raw = localStorage.getItem('grondpad-data');
   if (raw) {
     const d = JSON.parse(raw);
-    data = { habits: d.habits||[], seen: d.seen||{}, paused: d.paused||{},
-             gone: d.gone||{}, mood: d.mood||{}, journal: d.journal||[],
-             jgone: d.jgone||{}, updatedAt: d.updatedAt||0 };
+    // `habits` is the pre-cards key, and also what a Bloupunt backup carries. Reading
+    // both means an export from Bloupunt imports here as a stack of habit cards.
+    data = { cards: d.cards || d.habits || [], seen: d.seen||{}, paused: d.paused||{},
+             gone: d.gone||{}, updatedAt: d.updatedAt||0 };
+    migrateLoose(d);
   }
 } catch(e){}
+
+/* The first build of the reflection layer kept mood and journal in their own top-level
+   stores. Cards supersede that: fold anything found there into real cards once, so a
+   check-in logged before the change still counts toward the score afterwards. */
+function migrateLoose(d){
+  const hasType = t => data.cards.some(c => c.type === t);
+  const now = Date.now();
+
+  if (d.mood && Object.keys(d.mood).length && !hasType('mood')){
+    const days = {}, notes = {};
+    for (const [k, m] of Object.entries(d.mood)){
+      days[k] = m.score;
+      if (m.note) notes[k] = m.note;
+    }
+    data.cards.push({ id: now, type:'mood', name:'Mood', cue:'', stack:'', minimum:'',
+                      days, notes, mAt: now });
+  }
+  if (d.journal && d.journal.length && !hasType('journal')){
+    const days = {};
+    for (const e of d.journal) days[e.date] = 1;
+    data.cards.push({ id: now+1, type:'journal', name:'Journal', cue:'', stack:'',
+                      minimum:'', days, entries: d.journal.slice(), gone:{}, mAt: now });
+  }
+}
 
 // aiProxy is not part of syncReady() — the companion is optional and its absence must
 // never stop the encrypted data sync from running.
@@ -512,22 +551,19 @@ let pushTimer = null;
 let pendingPush = false;    // an unsynced local change is waiting to be pushed
 let lastSha = null;         // last known remote file sha, for a GET-less flush on close
 
-let screen    = 'today';    // today | manage | journal | history | talk
+let screen    = 'today';    // today | manage
 
-/* Reflection-layer drafts. Deliberately NOT in `data`: an unsaved slider position or a
-   half-typed entry is not a fact about the day, and syncing it would let one device
-   overwrite the other's in-progress writing. null means "no draft, show what's saved". */
-let moodDraft     = null;   // number | null
-let moodNoteDraft = null;   // string | null
-let moodNoteDirty = false;
-let journalDraft  = '';
-let journalPrompt = null;   // index into PROMPTS | null
-let jConfirm      = null;   // journal id awaiting delete confirm | null
-let chat          = [];     // companion transcript — local only, see talkScreen()
-try { chat = JSON.parse(localStorage.getItem('grondpad-chat')||'[]'); } catch(e){}
-let chatDraft = '';
-let chatBusy  = null;       // null | 'sending'
-let chatErr   = null;       // string | null
+/* Reflection-card drafts, keyed by card id because a stack can hold several cards at
+   once. Deliberately NOT in `data`: an unsaved slider position or a half-typed entry is
+   not a fact about the day, and syncing it would let one device overwrite the other's
+   in-progress writing. An absent key means "no draft, show what is saved". */
+let moodDrafts = {};        // cardId -> number      slider mid-drag
+let noteDrafts = {};        // cardId -> string      mood note being typed
+let drafts     = {};        // cardId -> string      journal entry / chat message
+let promptIdx  = {};        // cardId -> index into PROMPTS
+let jConfirm   = null;      // journal entry id awaiting delete confirm | null
+let chatBusy   = false;
+let chatErr    = null;      // string | null
 let editing   = null;       // habit id | 'new' | null
 let confirm   = null;       // habit id | null
 let expanded  = null;       // habit id | null
@@ -573,11 +609,10 @@ window.undo = () => {
   // Outline whatever actually changed rather than announcing it in a banner: a card
   // appearing at the top would shove every row down and then snap back.
   const snapshot = list => { const m={}; for (const h of list||[]) m[h.id] = JSON.stringify(h); return m; };
-  const before = snapshot(data.habits);
-  data = { habits: obj.habits||[], seen: obj.seen||{}, paused: obj.paused||{},
-           gone: obj.gone||{}, mood: obj.mood||{}, journal: obj.journal||[],
-           jgone: obj.jgone||{}, updatedAt: obj.updatedAt||0 };
-  const after = snapshot(data.habits);
+  const before = snapshot(data.cards);
+  data = { cards: obj.cards||[], seen: obj.seen||{}, paused: obj.paused||{},
+           gone: obj.gone||{}, updatedAt: obj.updatedAt||0 };
+  const after = snapshot(data.cards);
   flashIds = {};
   for (const id of new Set(Object.keys(before).concat(Object.keys(after))))
     if (before[id] !== after[id]) flashIds[id] = true;
@@ -646,24 +681,54 @@ async function decryptData(pkg, pass){
    untouched one - which is the right answer in every case that can actually arise. */
 function unionInto(incoming){
   const localById = {}, remoteById = {}, order = [], on = {};
-  for (const h of data.habits) localById[h.id] = h;
-  for (const h of (incoming.habits||[])) remoteById[h.id] = h;
-  for (const h of data.habits){ order.push(h.id); on[h.id] = 1; }
-  for (const h of (incoming.habits||[])) if (!on[h.id]){ order.push(h.id); on[h.id] = 1; }
+  const inCards = incoming.cards || incoming.habits || [];   // accepts a Bloupunt blob
+  for (const h of data.cards) localById[h.id] = h;
+  for (const h of inCards) remoteById[h.id] = h;
+  for (const h of data.cards){ order.push(h.id); on[h.id] = 1; }
+  for (const h of inCards) if (!on[h.id]){ order.push(h.id); on[h.id] = 1; }
 
   // Tombstones union too, keeping the later of two deletions.
   const gone = { ...(data.gone||{}) };
   for (const [id, ts] of Object.entries(incoming.gone||{}))
     gone[id] = Math.max(gone[id]||0, ts||0);
 
-  data.habits = order.map(id => {
+  data.cards = order.map(id => {
     const l = localById[id], r = remoteById[id];
     if (!(l && r)) return l || r;
     const days = { ...(l.days||{}), ...(r.days||{}) };   // union, remote wins a clash
-    const meta = (r.mAt||0) > (l.mAt||0) ? r : l;        // newer edit wins the fields
-    return { ...meta, days };
+    const newer = (r.mAt||0) > (l.mAt||0);
+    const meta = newer ? r : l;                          // newer edit wins the fields
+    const merged = { ...meta, days };
+
+    /* A mood note is per-DAY, not per-card, so it cannot ride the card's mAt alone —
+       two devices can hold different notes for the same date. Union the keys so no note
+       is dropped, and let the newer card decide any date they both wrote. */
+    if (l.notes || r.notes)
+      merged.notes = newer ? { ...(l.notes||{}), ...(r.notes||{}) }
+                           : { ...(r.notes||{}), ...(l.notes||{}) };
+
+    /* Journal entries union by id with their own per-entry mAt and the card's own
+       tombstones. Same contract as cards themselves, one level down: an entry written
+       on the phone must survive a merge from a device that never saw it. */
+    if (l.entries || r.entries){
+      const eGone = { ...(l.gone||{}) };
+      for (const [eid, ts] of Object.entries(r.gone||{}))
+        eGone[eid] = Math.max(eGone[eid]||0, ts||0);
+
+      const byId = {};
+      for (const e of (l.entries||[])) byId[e.id] = e;
+      for (const e of (r.entries||[])){
+        const prev = byId[e.id];
+        if (!prev || (e.mAt||0) > (prev.mAt||0)) byId[e.id] = e;
+      }
+      merged.entries = Object.values(byId)
+        .filter(e => { const ts = eGone[e.id]; return !ts || (e.mAt||0) > ts; })
+        .sort((a,b) => (b.id||0) - (a.id||0));      // newest first, stable across devices
+      merged.gone = eGone;
+    }
+    return merged;
   }).filter(h => {
-    // A delete sticks unless the habit was edited AFTER it - editing it somewhere else
+    // A delete sticks unless the card was edited AFTER it - editing it somewhere else
     // is a clear statement that it is still wanted, and that is the newer intent.
     const ts = gone[h.id];
     return !ts || (h.mAt||0) > ts;
@@ -671,35 +736,6 @@ function unionInto(incoming){
   data.gone = gone;
   data.seen = { ...(data.seen||{}), ...(incoming.seen||{}) };
   data.paused = { ...(data.paused||{}), ...(incoming.paused||{}) };
-
-  /* Mood is one entry per day, so unlike a habit's days map there is no "presence
-     wins" answer — two devices can hold different scores for the same date and the
-     merge has to choose. Newer mAt takes it, same rule as habit metadata. Entries
-     written before mAt existed count as oldest, so any edited entry beats them. */
-  const mood = { ...(data.mood||{}) };
-  for (const [k, r] of Object.entries(incoming.mood||{})){
-    const l = mood[k];
-    if (!l || (r.mAt||0) > (l.mAt||0)) mood[k] = r;
-  }
-  data.mood = mood;
-
-  /* Journal entries are immutable in practice but deletable, so they union by id
-     with tombstones — the same shape as habits, for the same reason: an entry
-     written on the phone must survive a merge from a device that never saw it. */
-  const jgone = { ...(data.jgone||{}) };
-  for (const [id, ts] of Object.entries(incoming.jgone||{}))
-    jgone[id] = Math.max(jgone[id]||0, ts||0);
-
-  const jById = {};
-  for (const e of (data.journal||[])) jById[e.id] = e;
-  for (const e of (incoming.journal||[])){
-    const l = jById[e.id];
-    if (!l || (e.mAt||0) > (l.mAt||0)) jById[e.id] = e;
-  }
-  data.journal = Object.values(jById)
-    .filter(e => { const ts = jgone[e.id]; return !ts || (e.mAt||0) > ts; })
-    .sort((a,b) => (b.id||0) - (a.id||0));          // newest first, stable across devices
-  data.jgone = jgone;
 }
 
 // Content fingerprint that ignores updatedAt - lets pull decide whether the
@@ -709,18 +745,20 @@ function dataSig(o){
     // Metadata belongs in here. While it did not, a name that differed between devices
     // produced identical signatures, so the winning side decided it had nothing to send
     // and quietly sat on the correction while the loser kept republishing the old name.
-    h: (o.habits||[]).map(x => [x.id, x.name||'', x.type||'', x.dir||'', x.cue||'',
+    h: (o.cards || o.habits || []).map(x => [x.id, x.name||'', x.type||'', x.dir||'', x.cue||'',
                                 x.stack||'', x.minimum||'', x.mAt||0,
-                                Object.keys(x.days||{}).sort()]),
+                                Object.keys(x.days||{}).sort(),
+        // A mood day's VALUE matters, not just that the day exists — two devices can
+        // hold 3/10 and 8/10 for the same date. Same for a note's text and an entry's
+        // body: key-only would call them identical and quietly sit on the correction.
+                                Object.keys(x.days||{}).sort().map(k => x.days[k]),
+                                Object.keys(x.notes||{}).sort().map(k => [k, x.notes[k]]),
+                                (x.entries||[]).map(e => [e.id, e.text||'', e.prompt||'', e.mAt||0])
+                                  .sort((a,b)=>a[0]-b[0]),
+                                Object.keys(x.gone||{}).sort()]),
     s: Object.keys(o.seen||{}).sort(),
     p: Object.keys(o.paused||{}).sort(),
-    g: Object.keys(o.gone||{}).sort(),
-    // Mood and journal carry their VALUES, not just their keys. A key-only signature
-    // would call two devices identical while they disagreed about today's score or an
-    // edited note — the same bug the habit metadata comment above describes.
-    m: Object.keys(o.mood||{}).sort().map(k => [k, o.mood[k].score, o.mood[k].note||'', o.mood[k].mAt||0]),
-    j: (o.journal||[]).map(e => [e.id, e.text||'', e.prompt||'', e.mAt||0]).sort((a,b)=>a[0]-b[0]),
-    jg: Object.keys(o.jgone||{}).sort()
+    g: Object.keys(o.gone||{}).sort()
   });
 }
 
@@ -851,6 +889,32 @@ window.addEventListener('pageshow', autoPull);    // bfcache restore
 
 const isCounter = h => h.type === 'plus' || h.type === 'minus' || h.type === 'plusminus';
 const isScore   = h => h.type === 'score';
+const isMood    = h => h.type === 'mood';
+const isJournal = h => h.type === 'journal';
+const isTalk    = h => h.type === 'talk';
+
+/* INERT cards display something and record nothing. They hold no days{}, so they are
+   skipped by the score, by perfect-day checks and by every "did you do everything
+   today" test — a card you cannot log must never be able to break a clean day. */
+const isInert = h => isScore(h);
+
+/* PANEL cards are the reflection layer: they record a day like a habit does, but their
+   own content is the point and the chain is secondary, so their week and month views
+   are demoted below that content and shown only when expanded. The month grid doubles
+   as their history: tapping a day opens that day's note, entries or conversation. */
+const isPanel = h => isMood(h) || isJournal(h) || isTalk(h);
+
+// A real habit — the original tick/counter/time types. Used where copy or a warning
+// only makes sense for something you tick, like the missing-cue nudge.
+const isHabitType = h => !isInert(h) && !isPanel(h);
+// The plain daily tick: a habit that is neither a counter nor a time-of-day.
+const isToggle = h => isHabitType(h) && !isCounter(h) && !isTime(h);
+
+// Add-once cards. Only the five habit types can be added more than once.
+const SINGLETON = ['score','mood','journal','talk'];
+const hasType = t => data.cards.some(c => c.type === t);
+const defaultName = t => t==='mood' ? 'Mood' : t==='journal' ? 'Journal'
+  : t==='talk' ? 'Talk' : t==='score' ? 'Score' : '';
 const isTime    = h => h.type === 'time';
 
 /* Time habits log the FIRST time of day the thing happened, as minutes since local
@@ -869,7 +933,7 @@ const fmtGap = m => {
   const a = Math.abs(Math.round(m));
   return a >= 60 ? Math.floor(a/60)+'h '+(a%60?(a%60)+'m':'').trim() : a+'m';
 };
-const hasScore  = () => data.habits.some(isScore);
+const hasScore  = () => data.cards.some(isScore);
 // "Logged" == a record exists for that day. Toggle stores 1; a counter may store
 // 0 or a negative net and still counts, because the goal is simply to log.
 const has = (days, k) => days[k] !== undefined;
@@ -898,8 +962,8 @@ function habitStart(h){
 }
 function firstLogAll(){
   let f = null;
-  for (const h of data.habits){
-    if (isScore(h)) continue;
+  for (const h of data.cards){
+    if (isInert(h)) continue;
     const s = habitStart(h);
     if (s && (!f || s < f)) f = s;
   }
@@ -1077,13 +1141,13 @@ function chainRun(h){
    score, and staying shown-up is what makes it grow. */
 function dayScore(k){
   let s = 0;
-  for (const h of data.habits){
-    if (isScore(h)) continue;
+  for (const h of data.cards){
+    if (isInert(h)) continue;
     s += chainRun(h).points[k] || 0;
   }
   return s;
 }
-const dayHasLog = k => data.habits.some(h => !isScore(h) && has(h.days, k));
+const dayHasLog = k => data.cards.some(h => !isInert(h) && has(h.days, k));
 // The score's own last-21-day sample, for colouring only.
 function scoreSample(){
   const out = []; const c = midnight();
@@ -1147,7 +1211,7 @@ function statsFor(h){
 }
 
 function perfectStreak(){
-  const habits = data.habits.filter(h => !isScore(h));   // the score isn't a habit you do
+  const habits = data.cards.filter(h => !isInert(h));   // the score isn't a habit you do
   if (!habits.length) return 0;
   const paused = data.paused || {};
   const allDone = d => habits.every(h => has(h.days||{}, keyFor(d)));        // recorded, any type
@@ -1175,7 +1239,7 @@ function shade(h, d){
 }
 
 function currentTier(){
-  const streaks = data.habits.filter(h => !isScore(h)).map(h => statsFor(h).streak);   // counters count too
+  const streaks = data.cards.filter(h => !isInert(h)).map(h => statsFor(h).streak);   // counters count too
   const best = Math.max(perfectStreak(), 0, ...streaks);
   let t = TIERS[0];
   for (const x of TIERS) if (best >= x.min) t = x;
@@ -1185,18 +1249,18 @@ function currentTier(){
 /* ═══════════════ MILESTONES ═══════════════ */
 
 function checkMilestones(){
-  if (!booted || !data.habits.length) return;
+  if (!booted || !data.cards.length) return;
   const hits = [];
 
   const p = perfectStreak();
   for (const m of PERFECT_MARKS){
     const id = 'perfect:'+m.d;
     if (p === m.d && !data.seen[id])
-      hits.push({ id, label:m.label, weight:m.weight, sub:'Every habit, '+m.d+' days straight' });
+      hits.push({ id, label:m.label, weight:m.weight, sub:'Every card, '+m.d+' days straight' });
   }
 
-  for (const h of data.habits){
-    if (isScore(h)) continue;                            // the score has no streak
+  for (const h of data.cards){
+    if (isInert(h)) continue;                            // the score has no streak
     const s = statsFor(h);                               // counters earn recording streaks too
     for (const m of STREAK_MARKS){
       const id = 'streak:'+h.id+':'+m.d;
@@ -1215,14 +1279,14 @@ function checkMilestones(){
 /* ═══════════════ ACTIONS ═══════════════ */
 
 window.toggle = (id, k) => {
-  const h = data.habits.find(x => x.id === id);
+  const h = data.cards.find(x => x.id === id);
   if (!h) return;
-  const wasAll = data.habits.filter(x=>!isScore(x)).length > 0 && data.habits.filter(x=>!isScore(x)).every(x => has(x.days, todayKey()));
+  const wasAll = data.cards.filter(x=>!isInert(x)).length > 0 && data.cards.filter(x=>!isInert(x)).every(x => has(x.days, todayKey()));
 
   if (h.days[k]) delete h.days[k]; else h.days[k] = 1;
 
-  const nowAll = data.habits.filter(x=>!isScore(x)).length > 0 && data.habits.filter(x=>!isScore(x)).every(x => has(x.days, todayKey()));
-  if (k === todayKey() && nowAll && !wasAll && data.habits.length > 1){
+  const nowAll = data.cards.filter(x=>!isInert(x)).length > 0 && data.cards.filter(x=>!isInert(x)).every(x => has(x.days, todayKey()));
+  if (k === todayKey() && nowAll && !wasAll && data.cards.length > 1){
     flash = true;
     setTimeout(() => { flash = false; render(); }, 1400);
   }
@@ -1242,12 +1306,12 @@ window.toggleExpand = id => { expanded = (expanded === id) ? null : id; dayEdit 
 // Counter logging. Net value persists even at 0 - the goal is to log, so a day
 // with any interaction counts as logged. No milestones/flash: counters are trackers.
 window.bump = (id, k, delta) => {
-  const h = data.habits.find(x => x.id === id);
+  const h = data.cards.find(x => x.id === id);
   if (!h) return;
-  const wasAll = data.habits.filter(x=>!isScore(x)).length > 0 && data.habits.filter(x=>!isScore(x)).every(x => has(x.days, todayKey()));
+  const wasAll = data.cards.filter(x=>!isInert(x)).length > 0 && data.cards.filter(x=>!isInert(x)).every(x => has(x.days, todayKey()));
   h.days[k] = (h.days[k] || 0) + delta;    // net value persists even at 0 - the goal is to log
-  const nowAll = data.habits.filter(x=>!isScore(x)).length > 0 && data.habits.filter(x=>!isScore(x)).every(x => has(x.days, todayKey()));
-  if (k === todayKey() && nowAll && !wasAll && data.habits.length > 1){
+  const nowAll = data.cards.filter(x=>!isInert(x)).length > 0 && data.cards.filter(x=>!isInert(x)).every(x => has(x.days, todayKey()));
+  if (k === todayKey() && nowAll && !wasAll && data.cards.length > 1){
     flash = true;
     setTimeout(() => { flash = false; render(); }, 1400);
   }
@@ -1261,7 +1325,7 @@ window.bump = (id, k, delta) => {
 // "didn't happen" is a claim about the whole day, and going on at 8pm falsifies it,
 // so a slip can always replace the clean marker.
 window.logNow = id => {
-  const h = data.habits.find(x => x.id === id);
+  const h = data.cards.find(x => x.id === id);
   if (!h) return;
   const k = todayKey();
   if (has(h.days, k) && h.days[k] < NONE_MIN) return;   // a real first time already stands
@@ -1269,20 +1333,20 @@ window.logNow = id => {
   save(); checkMilestones(); render();
 };
 window.logNone = id => {
-  const h = data.habits.find(x => x.id === id);
+  const h = data.cards.find(x => x.id === id);
   if (!h || has(h.days, todayKey())) return;
   h.days[todayKey()] = NONE_MIN;
   save(); checkMilestones(); render();
 };
 window.setDayTime = (id, k, hhmm) => {
-  const h = data.habits.find(x => x.id === id);
+  const h = data.cards.find(x => x.id === id);
   if (!h || !hhmm) return;
   const [a,b] = hhmm.split(':').map(Number);
   h.days[k] = Math.max(0, Math.min(NONE_MIN-1, a*60 + b));
   save(); render();
 };
 window.setDayNone = (id, k) => {
-  const h = data.habits.find(x => x.id === id);
+  const h = data.cards.find(x => x.id === id);
   if (!h) return;
   h.days[k] = NONE_MIN;
   save(); render();
@@ -1361,7 +1425,7 @@ document.addEventListener('click', e => {
 window.askClearTo = k => { chipCut = k; render(); };
 window.cancelClearTo = () => { chipCut = null; render(); };
 window.doClearTo = (id, k) => {
-  const h = data.habits.find(x => x.id === id);
+  const h = data.cards.find(x => x.id === id);
   if (h) for (const key of Object.keys(h.days)) if (key <= k) delete h.days[key];
   chipCut = null;
   save(); render();
@@ -1379,13 +1443,13 @@ window.stepDay = (id, delta) => {
   render();
 };
 window.setDone  = (id, k) => {
-  const h = data.habits.find(x => x.id === id);
+  const h = data.cards.find(x => x.id === id);
   if (!h) return;
   h.days[k] = 1;
   save(); checkMilestones(); render();      // backfilling can legitimately earn a milestone
 };
 window.clearDay = (id, k) => {
-  const h = data.habits.find(x => x.id === id);
+  const h = data.cards.find(x => x.id === id);
   if (!h) return;
   delete h.days[k];
   save(); render();
@@ -1395,7 +1459,7 @@ window.clearDay = (id, k) => {
 window.askClearHist    = () => { clearHist = editing; render(); };
 window.cancelClearHist = () => { clearHist = null; render(); };
 window.doClearHist     = () => {
-  const h = data.habits.find(x => x.id === editing);
+  const h = data.cards.find(x => x.id === editing);
   if (h) { h.days = {}; save(); }
   clearHist = null; render();
 };
@@ -1406,7 +1470,7 @@ window.openNew = () => {
 };
 
 window.openEdit = id => {
-  const h = data.habits.find(x => x.id === id);
+  const h = data.cards.find(x => x.id === id);
   if (!h) return;
   form = { name:h.name, cue:h.cue||'', stack:h.stack||'', minimum:h.minimum||'', type:h.type||'toggle', dir:h.dir||'up' };
   editing = id; confirm = null; clearHist = null; render();
@@ -1419,13 +1483,38 @@ window.commit = () => {
   if (form.type === 'score'){                 // the computed card: name is fixed, single instance
     if (editing === 'new'){
       if (hasScore()) { editing = null; render(); return; }
-      data.habits.push({ id: Date.now(), name:'Score', type:'score', days:{}, mAt: Date.now() });
+      data.cards.push({ id: Date.now(), name:'Score', type:'score', days:{}, mAt: Date.now() });
     } else {
-      const h = data.habits.find(x => x.id === editing);
+      const h = data.cards.find(x => x.id === editing);
       if (h){ h.type = 'score'; h.name = 'Score'; h.mAt = Date.now(); }
     }
     save(); editing = null; render(); return;
   }
+
+  /* Reflection cards may be saved unnamed — the default is a perfectly good name, and
+     making someone type "Mood" before they can have a mood scale is friction for
+     nothing. Habits still require a name: an unnamed habit is not a habit. */
+  if (isPanel({ type: form.type })){
+    const t = form.type, nm = form.name.trim() || defaultName(t);
+    if (editing === 'new'){
+      if (hasType(t)) { editing = null; render(); return; }   // add-once
+      data.cards.push({ id: Date.now(), name:nm, type:t, cue:'', stack:'', minimum:'',
+                        days:{}, ...(t==='mood' ? {notes:{}} : {}),
+                        ...(t==='journal' ? {entries:[], gone:{}} : {}),
+                        ...(t==='talk' ? {chat:[]} : {}), mAt: Date.now() });
+    } else {
+      const h = data.cards.find(x => x.id === editing);
+      if (h){
+        if (famOf(h.type||'toggle') !== famOf(t)) h.days = {};
+        h.type = t; h.name = nm; h.mAt = Date.now();
+        if (t==='mood' && !h.notes) h.notes = {};
+        if (t==='journal' && !h.entries){ h.entries = []; h.gone = {}; }
+        if (t==='talk' && !h.chat) h.chat = [];
+      }
+    }
+    save(); editing = null; render(); return;
+  }
+
   const name = form.name.trim();
   if (!name) return;
   const payload = {
@@ -1437,9 +1526,9 @@ window.commit = () => {
     dir:     form.dir || 'up'
   };
   if (editing === 'new'){
-    data.habits.push({ id: Date.now(), days:{}, ...payload, mAt: Date.now() });
+    data.cards.push({ id: Date.now(), days:{}, ...payload, mAt: Date.now() });
   } else {
-    const h = data.habits.find(x => x.id === editing);
+    const h = data.cards.find(x => x.id === editing);
     if (h){
       // A counter's -1 is not a time of day. Crossing families drops the old values.
       if (famOf(h.type||'toggle') !== famOf(payload.type)) h.days = {};
@@ -1452,18 +1541,18 @@ window.commit = () => {
 // Reorder habits in Manage. Order is just the array order, which the sync union
 // preserves (local order first, remote-only habits appended).
 window.moveHabit = (id, dir) => {
-  const i = data.habits.findIndex(h => h.id === id);
+  const i = data.cards.findIndex(h => h.id === id);
   const j = i + dir;
-  if (i < 0 || j < 0 || j >= data.habits.length) return;
-  const [h] = data.habits.splice(i, 1);
-  data.habits.splice(j, 0, h);
+  if (i < 0 || j < 0 || j >= data.cards.length) return;
+  const [h] = data.cards.splice(i, 1);
+  data.cards.splice(j, 0, h);
   save(); render();
 };
 
 window.askRemove = id => { confirm = id; render(); };
 window.cancelRemove = () => { confirm = null; render(); };
 window.doRemove = id => {
-  data.habits = data.habits.filter(h => h.id !== id);
+  data.cards = data.cards.filter(h => h.id !== id);
   // Leave a tombstone. The merge is a union, so without one the next device to sync
   // hands the habit straight back - it has no way to tell "deleted here" from
   // "not yet seen here".
@@ -1515,7 +1604,9 @@ window.importData = () => {
     reader.onload = () => {
       try {
         const obj = JSON.parse(reader.result);
-        if (!obj || !Array.isArray(obj.habits)) throw new Error('shape');
+        // Either key is a valid backup: `cards` from Grondpad, `habits` from Bloupunt.
+        if (!obj || !(Array.isArray(obj.cards) || Array.isArray(obj.habits)))
+          throw new Error('shape');
         const before = dataSig(data);
         unionInto(obj);
         save();
@@ -1769,6 +1860,12 @@ function dayChip(h){
   const label = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][d.getDay()]+' '+d.getDate()+' '+MONTHS[d.getMonth()];
   const logged = has(h.days, k);
   let controls;
+  // Reflection cards use the chip as an archive rather than a control: the same tap that
+  // edits a habit's day reads back what was written on that one.
+  if (isPanel(h)){
+    return '<div class="chip read"><span class="chipDate">'+label+'</span>'+
+      panelDayDetail(h, k)+'</div>';
+  }
   if (isTime(h)){
     const v = logged ? h.days[k] : null;
     const hhmm = (v !== null && v < NONE_MIN) ? fmtTime(v) : '';
@@ -1996,7 +2093,7 @@ function ptsPill(h){
 // Direction is respected, so "strongest" always means better, never merely larger.
 function habitDayStats(h){
   const paused = data.paused || {}, start = habitStart(h);
-  if (!start || isScore(h)) return null;
+  if (!start || isInert(h)) return null;
   const end = midnight();
   const winFrom = new Date(end); winFrom.setDate(end.getDate() - (WIN_DAYS-1));
   const from = winFrom > start ? winFrom : start;
@@ -2187,9 +2284,9 @@ function scoreRow(h){
 const WIN_DAYS = 91;                                    // 13 weeks, one screen of grid
 
 function scoreInsights(){
-  const habits = data.habits.filter(h => !isScore(h));
+  const habits = data.cards.filter(h => !isInert(h));
   const paused = data.paused || {};
-  if (!habits.length) return { sections: [], note: 'Add a habit and this fills in.' };
+  if (!habits.length) return { sections: [], note: 'Add a card and this fills in.' };
   const first = firstLogAll();
   if (!first) return { sections: [], note: 'Nothing logged yet.' };
 
@@ -2249,7 +2346,7 @@ function scoreInsights(){
     sinceRows.push(['Paused', pausedDays+' day'+(pausedDays===1?'':'s')+' \u00b7 not counted'+
       (pausedLogged ? ', '+pausedLogged+' still logged' : '')]);
   if (habits.length > 1)
-    sinceRows.push(['Every habit logged', perfect+' day'+(perfect===1?'':'s')]);
+    sinceRows.push(['Every card logged', perfect+' day'+(perfect===1?'':'s')]);
   sinceRows.push(['Longest run', runBest+' day'+(runBest===1?'':'s')+' in a row']);
   sinceRows.push(['Points earned', totalPts+' · '+
     (Math.round(totalPts/(eligible || totalDays)*10)/10)+' a day']);
@@ -2372,8 +2469,11 @@ function scoreGrid(q){
     '<div class="weeks">'+dowCol()+cols+'</div></div>';
 }
 
-function habitRow(h){
+function cardRow(h){
   if (isScore(h)) return scoreRow(h);
+  if (isMood(h)) return moodRow(h);
+  if (isJournal(h)) return journalRow(h);
+  if (isTalk(h)) return talkRow(h);
   const today = todayKey();
   if (isTime(h)) return timeRow(h, today);
   if (isCounter(h)) return counterRow(h, today);
@@ -2448,6 +2548,9 @@ function habitRow(h){
 
 // Values only mean something within a family, so switching families must drop history.
 const famOf = t => t==='score' ? 'score' : t==='time' ? 'time'
+  // Each reflection card is its own family: a mood score, an entry count and a
+  // conversation share no scale, so switching between them must drop the history.
+  : t==='mood' ? 'mood' : t==='journal' ? 'journal' : t==='talk' ? 'talk'
   : (t==='plus'||t==='minus'||t==='plusminus') ? 'counter' : 'toggle';
 
 // Which types can have a direction. Toggles and the score have nothing to rank.
@@ -2465,7 +2568,10 @@ function typeHint(t){
     : t==='minus' ? 'Tap − each time (e.g. a slip you want to avoid). Cells are tinted by your 7-day average.'
     : t==='plusminus' ? 'Both buttons: + for a win, − for a slip. The day is the running total, tinted by your 7-day average.'
     : t==='time' ? 'Log the first time of day it happened — one tap stamps the clock, or mark the day clean. Drawn as a graph so you can see it moving.'
-    : t==='score' ? 'One computed card that tallies every habit you logged each day, worth more as each chain lengthens. Nothing to tick — only one allowed.'
+    : t==='score' ? 'One computed card that tallies every card you logged each day, worth more as each chain lengthens. Nothing to tick — only one allowed.'
+    : t==='mood' ? 'A 1–10 scale with an optional line on why. Releasing the slider logs the day; the score itself does not change your points, so an honest 2 counts as much as a 9. One only.'
+    : t==='journal' ? 'Somewhere to write, with a prompt when you have nothing to say. Writing an entry logs the day. Tap a day in its calendar to read what you wrote. One only.'
+    : t==='talk' ? 'A reflection companion that already knows your recent moods and entries. Talking to it logs the day. Needs an endpoint — see Manage sync. One only.'
     : 'A simple daily tick. Builds streaks, milestones and the warming background.';
 }
 
@@ -2474,16 +2580,28 @@ const typeLabel = t => t==='plus' ? 'Counter · +'
   : t==='plusminus' ? 'Counter · +/−'
   : t==='time' ? 'First time of day'
   : t==='score' ? 'Day score'
+  : t==='mood' ? 'Mood scale · 1–10'
+  : t==='journal' ? 'Journal · writing'
+  : t==='talk' ? 'Companion · conversation'
   : 'Tick';
 
 function editorHTML(title){
-  const eh = (editing && editing !== 'new') ? data.habits.find(x => x.id === editing) : null;
-  const allowScore = !hasScore() || form.type === 'score';   // at most one score card
+  const eh = (editing && editing !== 'new') ? data.cards.find(x => x.id === editing) : null;
+  /* Add-once types disappear from the picker once one exists, unless this editor is the
+     one editing it. Without that check, opening your own Mood card would offer every
+     type except the one it already is. */
+  const allow = t => SINGLETON.indexOf(t) < 0 || !hasType(t) || form.type === t
+                     || (eh && eh.type === t);
+
   const seg = '<div class="fld">'+
-      '<label class="lbl">How you log it</label>'+
-      '<div class="picker">'+
-        segBtn('toggle','Tick')+ segBtn('plus','+')+ segBtn('minus','−')+ segBtn('plusminus','+/−')+
-        segBtn('time','Time')+ (allowScore ? segBtn('score','Score') : '')+
+      '<label class="lbl">What kind of card</label>'+
+      '<div class="picker wide">'+
+        segBtn('toggle','Tick')+ segBtn('plus','Count +')+ segBtn('minus','Count −')+
+        segBtn('plusminus','Count ±')+ segBtn('time','Time of day')+
+        (allow('score')   ? segBtn('score','Day score') : '')+
+        (allow('mood')    ? segBtn('mood','Mood') : '')+
+        (allow('journal') ? segBtn('journal','Journal') : '')+
+        (allow('talk')    ? segBtn('talk','Talk') : '')+
       '</div>'+
       '<p class="hint">'+typeHint(form.type)+'</p>'+
       ((eh && famOf(eh.type||'toggle') !== famOf(form.type) && Object.keys(eh.days||{}).length)
@@ -2499,6 +2617,24 @@ function editorHTML(title){
   if (form.type === 'score'){                                // stripped editor - nothing to name/cue
     return '<div class="editor">'+
       '<h3>'+title+'</h3>'+ seg +
+      '<div class="acts">'+
+        '<button class="btnP" onclick="commit()">Save</button>'+
+        '<button class="btnG" onclick="cancelEdit()">Cancel</button>'+
+      '</div>'+
+    '</div>';
+  }
+
+  /* Reflection cards get a name — calling it "Evening pages" instead of "Journal" is
+     worth having — but no cue, anchor or floor. Those are habit-design tools: there is
+     no useful "floor" for a mood scale. */
+  if (isPanel({ type: form.type })){
+    return '<div class="editor">'+
+      '<h3>'+title+'</h3>'+ seg +
+      '<div class="fld">'+
+        '<label class="lbl" for="fName">What to call it</label>'+
+        '<input id="fName" value="'+esc(form.name)+'" placeholder="'+
+          esc(defaultName(form.type))+'" oninput="grab()">'+
+      '</div>'+
       '<div class="acts">'+
         '<button class="btnP" onclick="commit()">Save</button>'+
         '<button class="btnG" onclick="cancelEdit()">Cancel</button>'+
@@ -2635,10 +2771,19 @@ function pausePanel(){
   return banner + chooser;
 }
 
-/* ═══════════════ REFLECTION LAYER — mood, journal, history, companion ═══════════
-   Grondpad's half of the merge. Everything below reads and writes `data` through the
-   same save() as the habit engine, so it inherits undo, encrypted push, and the union
-   merge for free. No separate storage, no second sync path. */
+/* ═══════════════ REFLECTION CARDS — mood, journal, talk ═══════════════
+   Three card types that are not habits. Each records a day exactly as a habit does —
+   days{} where presence means "engaged today" — so they flow through chainRun,
+   dayScore, the tier background and perfect-day checks with no special-casing at all.
+   Logging is the unit: a 1/10 day scores identically to a 10/10 one, because being
+   penalised for honestly recording a bad day is how people stop recording.
+
+   They differ from habits in layout, not in bookkeeping. The card's own content leads,
+   and the week strip and month grid are demoted below it, visible only when expanded.
+   For a habit the chain IS the content; for these the chain is the footnote.
+
+   The month grid doubles as each card's history: tapping a day opens that day's note,
+   its entries or its conversation, through the same dayChip the habit types use. */
 
 const PROMPTS = [
   'What did you avoid today, and what was underneath it?',
@@ -2657,174 +2802,359 @@ const PROMPTS = [
 
 const moodWord = s => s<=2?'flat' : s<=4?'low' : s<=6?'steady' : s<=8?'good' : 'strong';
 // Reuses the habit engine's own day format ("Mon 24 Aug") so both halves of the app
-// speak about dates identically. fmtDay takes a Date; the reflection layer holds keys.
+// speak about dates identically. fmtDay takes a Date; the cards hold keys.
 const fmtKey  = k => fmtDay(parseKey(k));
 const fmtKeyS = k => fmtKey(k).slice(4);        // "24 Aug" — axis ends, no weekday
 
 /* Mood colour tracks the habit palette rather than a traffic light: clay at the low
    end, sage at the high end, paper through the middle. A 3/10 should read as a fact
-   about the day, not as an alarm. */
+   about the day, not as an alarm — you are not penalised for recording it honestly. */
 const moodHue = s => s<=4 ? lerpHex(CTR_RED, CTR_MID, (s-1)/3)
                           : lerpHex(CTR_MID, CTR_GRN, (s-4)/6);
 
-/* ── Today: the check-in card ── */
+/* ── The shared panel wrapper ──
+   Header, then the card's own content, then — expanded only — the demoted chain. */
+function panelShell(h, body, more){
+  const open  = expanded === h.id;
+  const done  = has(h.days||{}, todayKey());
+  const s     = statsFor(h);
+  const streakLine = s.streak > 0 ? s.streak+' day'+(s.streak===1?'':'s')+' running'
+                                  : 'Not yet today';
 
-function moodCard(){
-  const k = todayKey(), e = data.mood[k];
-  const s = moodDraft !== null ? moodDraft : (e ? e.score : 6);
-  // No entry yet means the default 6 is itself a saveable answer — the button has to be
-  // live on an untouched day, or a steady day is the one day you cannot record.
-  const dirty = !e || moodDraft !== null || moodNoteDirty;
-  const note = moodNoteDraft !== null ? moodNoteDraft : (e ? (e.note||'') : '');
-  return '<div class="row moodRow">'+
-    '<div class="moodHead">'+
-      '<span class="moodLbl">Mood</span>'+
-      '<span class="moodVal" style="color:'+(s<=4?'var(--clay)':'var(--sageDeep)')+'">'+
-        s+'/10 · '+moodWord(s)+'</span>'+
+  const statBlock =
+    '<div class="stats">'+
+      '<div><div class="sl">Streak</div><div class="sv">'+s.streak+'</div></div>'+
+      '<div><div class="sl">Best</div><div class="sv">'+s.best+'</div></div>'+
+      '<div><div class="sl">Last 30</div><div class="sv">'+s.last30+'/30</div></div>'+
+    '</div>';
+
+  return '<div class="row panel'+(done?' done':'')+(flashIds[h.id]?' undone':'')+'">'+
+    '<div class="top">'+
+      // A read-only mark, not a tick button: these cards are logged by using them, so a
+      // tick you could press would be a second, contradictory way to say the same thing.
+      '<span class="pmark'+(done?' on':'')+'" aria-hidden="true">'+(done?TICK_SVG:'')+'</span>'+
+      '<div class="nameBtn static">'+
+        '<div class="nameLine"><span class="hname">'+esc(h.name)+'</span>'+ptsPill(h)+'</div>'+
+        '<div class="streak">'+streakLine+'</div>'+
+      '</div>'+
+      '<button class="chev'+(open?' open':'')+'" aria-expanded="'+open+'" '+
+        'aria-label="Show details" onclick="toggleExpand('+h.id+')">'+CHEV_SVG+'</button>'+
     '</div>'+
-    '<input type="range" min="1" max="10" value="'+s+'" class="moodSlider" '+
-      'aria-label="Mood from 1 to 10" '+
-      'style="--fill:'+moodHue(s)+';--pct:'+(((s-1)/9)*100).toFixed(1)+'%" '+
-      'oninput="moodSlide(this.value)" onchange="moodSlide(this.value)">'+
-    '<textarea class="moodNote" rows="2" placeholder="One line on why (optional)" '+
-      'oninput="moodNote(this.value)">'+esc(note)+'</textarea>'+
-    '<button class="'+(dirty?'btnP':'btnG')+' moodSave" onclick="saveMood()"'+
-      (dirty?'':' disabled')+'>'+
-      (dirty ? 'Save check-in' : (e ? 'Saved for today' : 'Save check-in'))+'</button>'+
+    '<div class="pbody">'+body+'</div>'+
+    (open ? '<div class="exp">'+(more||'')+chainStrip(h)+fullGrid(h)+dayChip(h)+statBlock+'</div>' : '')+
   '</div>';
 }
 
-window.moodSlide = v => {
-  moodDraft = Number(v);
-  const k = todayKey(), e = data.mood[k];
-  // Repaint the readout in place. A full render would rebuild the slider mid-drag and
-  // the thumb would drop out from under the finger.
-  const val = document.querySelector('.moodVal');
-  const sl  = document.querySelector('.moodSlider');
-  const btn = document.querySelector('.moodSave');
-  if (val){ val.textContent = moodDraft+'/10 · '+moodWord(moodDraft);
-            val.style.color = moodDraft<=4 ? 'var(--clay)' : 'var(--sageDeep)'; }
-  if (sl){ sl.style.setProperty('--fill', moodHue(moodDraft));
-           sl.style.setProperty('--pct', (((moodDraft-1)/9)*100).toFixed(1)+'%'); }
-  if (btn && (!e || e.score !== moodDraft)){
-    btn.className = 'btnP moodSave'; btn.disabled = false; btn.textContent = 'Save check-in';
-  }
+/* ── Mood ── */
+
+function moodRow(h){
+  const k = todayKey(), open = expanded === h.id;
+  const logged = h.days[k] !== undefined;
+  const s = moodDrafts[h.id] !== undefined ? moodDrafts[h.id] : (logged ? h.days[k] : 6);
+  const note = (h.notes||{})[k] || '';
+
+  const slider =
+    '<div class="moodHead">'+
+      '<span class="moodVal" style="color:'+(s<=4?'var(--clay)':'var(--sageDeep)')+'">'+
+        s+'/10 · '+moodWord(s)+'</span>'+
+      (logged ? '' : '<span class="moodNudge">not logged</span>')+
+    '</div>'+
+    '<input type="range" min="1" max="10" value="'+s+'" class="moodSlider" '+
+      'data-card="'+h.id+'" aria-label="Mood from 1 to 10" '+
+      'style="--fill:'+moodHue(s)+';--pct:'+(((s-1)/9)*100).toFixed(1)+'%" '+
+      'oninput="moodSlide('+h.id+',this.value)" onchange="moodCommit('+h.id+',this.value)">';
+
+  // Collapsed is the slider alone — releasing it logs the day. The note is a refinement,
+  // not a requirement, so it only appears once you have opened the card.
+  const body = open
+    ? slider+
+      '<textarea class="moodNote" rows="2" placeholder="One line on why (optional)" '+
+        'oninput="moodNoteType('+h.id+',this.value)" '+
+        'onblur="moodNoteSave('+h.id+')">'+esc(note)+'</textarea>'
+    : slider;
+
+  return panelShell(h, body, open ? moodTrace(h) : '');
+}
+
+/* The 30-day trace, shown above the demoted chain when the card is open. It belongs to
+   the mood card rather than a screen of its own — the shape of the last month is a fact
+   about your mood, and it should sit with the thing that records it. */
+function moodTrace(h){
+  const days = windowDays(30).map(d => { const k = keyFor(d);
+    return { key:k, score: h.days[k] !== undefined ? h.days[k] : null }; });
+  const on = days.filter(d => d.score != null);
+  if (on.length < 2)
+    return '<p class="jHint" style="margin:0 0 12px">Two check-ins and the trace draws '+
+           'itself here.</p>';
+  const avg = (on.reduce((a,b)=>a+b.score,0)/on.length).toFixed(1);
+  return '<div class="trace">'+
+    '<div class="statRow">'+
+      '<div><div class="statLbl">AVG</div><div class="statVal serif sage">'+avg+'</div></div>'+
+      '<div><div class="statLbl">LOGGED</div><div class="statVal serif">'+on.length+'/30</div></div>'+
+    '</div>'+
+    moodChart(days)+
+    '<div class="chartAx"><span>'+fmtKeyS(days[0].key)+'</span>'+
+      '<span>'+fmtKeyS(days[29].key)+'</span></div>'+
+    '<p class="jHint" style="margin-top:6px">Dashed line is your 30-day average. '+
+      'Gaps are unlogged days.</p>'+
+  '</div>';
+}
+
+// Dragging repaints in place. A full render would rebuild the input mid-drag and the
+// thumb would drop out from under the finger.
+window.moodSlide = (id, v) => {
+  const n = Number(v);
+  moodDrafts[id] = n;
+  const card = document.querySelector('.moodSlider[data-card="'+id+'"]');
+  if (!card) return;
+  card.style.setProperty('--fill', moodHue(n));
+  card.style.setProperty('--pct', (((n-1)/9)*100).toFixed(1)+'%');
+  const val = card.parentElement.querySelector('.moodVal');
+  if (val){ val.textContent = n+'/10 · '+moodWord(n);
+            val.style.color = n<=4 ? 'var(--clay)' : 'var(--sageDeep)'; }
 };
 
-window.moodNote = v => {
-  moodNoteDraft = v;
-  moodNoteDirty = true;
-  const btn = document.querySelector('.moodSave');
-  if (btn){ btn.className = 'btnP moodSave'; btn.disabled = false; btn.textContent = 'Save check-in'; }
+// Releasing the slider IS the log — one gesture, same as tapping a habit.
+window.moodCommit = (id, v) => {
+  const h = data.cards.find(c => c.id === id);
+  if (!h) return;
+  const wasAll = allLogged();
+  h.days[todayKey()] = Number(v);
+  h.mAt = Date.now();
+  delete moodDrafts[id];
+  save();
+  if (!wasAll && allLogged()) flashAllDone();
+  checkMilestones();
+  render();
 };
 
-window.saveMood = () => {
-  const k = todayKey(), cur = data.mood[k];
-  const score = moodDraft !== null ? moodDraft : (cur ? cur.score : 6);
-  const note  = moodNoteDraft !== null ? moodNoteDraft : (cur ? (cur.note||'') : '');
-  data.mood[k] = { score, note: note.trim(), mAt: Date.now() };
-  moodDraft = null; moodNoteDraft = null; moodNoteDirty = false;
+window.moodNoteType = (id, v) => { noteDrafts[id] = v; };
+window.moodNoteSave = id => {
+  const h = data.cards.find(c => c.id === id);
+  if (!h || noteDrafts[id] === undefined) return;
+  const k = todayKey(), v = noteDrafts[id].trim();
+  h.notes = h.notes || {};
+  if (v) h.notes[k] = v; else delete h.notes[k];
+  // A note without a score is still a check-in — do not let it be the one thing that
+  // fails to count for the day.
+  if (h.days[k] === undefined && v) h.days[k] = 6;
+  h.mAt = Date.now();
+  delete noteDrafts[id];
   save();
   render();
 };
 
 /* ── Journal ── */
 
-function journalScreen(){
-  const draft = esc(journalDraft);
-  const compose = '<div class="row">'+
-    (journalPrompt !== null
-      ? '<p class="serif jPrompt">'+esc(PROMPTS[journalPrompt])+'</p>'
-      : '<p class="jHint">Write freely, or take a prompt.</p>')+
-    '<textarea class="jText" rows="5" placeholder="Write it down" '+
-      'oninput="journalType(this.value)">'+draft+'</textarea>'+
-    '<div class="jBtns">'+
-      '<button class="btnG" onclick="nextPrompt()">'+
-        (journalPrompt !== null ? 'Another prompt' : 'Give me a prompt')+'</button>'+
-      '<button class="btnP" onclick="addJournal()"'+(journalDraft.trim()?'':' disabled')+
-        '>Save entry</button>'+
-    '</div>'+
-  '</div>';
+function journalRow(h){
+  const open = expanded === h.id;
+  const draft = drafts[h.id] || '';
+  const pi = promptIdx[h.id];
+  const entries = h.entries || [];
 
-  const entries = (data.journal||[]).map(e =>
-    '<div class="row">'+
+  const compose =
+    (pi !== undefined ? '<p class="serif jPrompt">'+esc(PROMPTS[pi])+'</p>' : '')+
+    '<textarea class="jText" rows="'+(open?5:2)+'" placeholder="Write it down" '+
+      'oninput="jType('+h.id+',this.value)">'+esc(draft)+'</textarea>'+
+    '<div class="jBtns">'+
+      '<button class="btnG" onclick="jPrompt('+h.id+')">'+
+        (pi !== undefined ? 'Another prompt' : 'Give me a prompt')+'</button>'+
+      '<button class="btnP" onclick="jAdd('+h.id+')"'+(draft.trim()?'':' disabled')+
+        '>Save entry</button>'+
+    '</div>';
+
+  // Past entries are the expanded half — collapsed, the card is somewhere to write, not
+  // somewhere to read.
+  const past = entries.map(e =>
+    '<div class="jEntry">'+
       '<div class="jTop">'+
         '<span class="jDate">'+fmtKey(e.date)+'</span>'+
         (jConfirm === e.id
           ? '<span class="jConfirm">Delete? '+
-              '<button class="link red" onclick="doRemoveJournal('+e.id+')">Yes</button>'+
-              '<button class="link" onclick="cancelRemoveJournal()">Keep</button></span>'
-          : '<button class="link" onclick="askRemoveJournal('+e.id+')">delete</button>')+
+              '<button class="link red" onclick="jRemove('+h.id+','+e.id+')">Yes</button>'+
+              '<button class="link" onclick="jCancel()">Keep</button></span>'
+          : '<button class="link" onclick="jAsk('+e.id+')">delete</button>')+
       '</div>'+
       (e.prompt ? '<p class="serif jEntryPrompt">'+esc(e.prompt)+'</p>' : '')+
       '<p class="jBody">'+esc(e.text)+'</p>'+
     '</div>').join('');
 
-  return '<div class="stack">'+compose+entries+
-    (!(data.journal||[]).length
-      ? '<p class="cap">Nothing written yet. The prompts are there for the days you have nothing to say.</p>'
-      : '')+
-  '</div>';
+  return panelShell(h, compose,
+    entries.length ? '<div class="jList">'+past+'</div>'
+                   : '<p class="cap">Nothing written yet.</p>');
 }
 
-window.journalType = v => {
-  const was = !!journalDraft.trim(), now = !!v.trim();
-  journalDraft = v;
-  if (was !== now){                                  // only repaint when the button flips
-    const b = document.querySelector('.jBtns .btnP');
+window.jType = (id, v) => {
+  const was = !!(drafts[id]||'').trim(), now = !!v.trim();
+  drafts[id] = v;
+  if (was !== now){                      // only repaint when the button actually flips
+    const b = document.querySelector('.row.panel .jBtns .btnP');
     if (b) b.disabled = !now;
   }
 };
 
-window.nextPrompt = () => {
-  // Start from a random prompt rather than always the first, but never repeat the one
-  // already showing.
-  journalPrompt = journalPrompt === null
+window.jPrompt = id => {
+  promptIdx[id] = promptIdx[id] === undefined
     ? Math.floor(Math.random() * PROMPTS.length)
-    : (journalPrompt + 1) % PROMPTS.length;
+    : (promptIdx[id] + 1) % PROMPTS.length;
   render();
 };
 
-window.addJournal = () => {
-  const text = journalDraft.trim();
+window.jAdd = id => {
+  const h = data.cards.find(c => c.id === id);
+  if (!h) return;
+  const text = (drafts[id]||'').trim();
   if (!text) return;
-  const now = Date.now();
-  data.journal.unshift({ id: now, date: todayKey(),
-    prompt: journalPrompt !== null ? PROMPTS[journalPrompt] : null, text, mAt: now });
-  journalDraft = ''; journalPrompt = null;
+  const now = Date.now(), k = todayKey();
+  const wasAll = allLogged();
+  h.entries = h.entries || [];
+  h.entries.unshift({ id: now, date: k,
+    prompt: promptIdx[id] !== undefined ? PROMPTS[promptIdx[id]] : null, text, mAt: now });
+  h.days[k] = (h.days[k] || 0) + 1;      // entries per day; presence is what scores
+  h.mAt = now;
+  delete drafts[id]; delete promptIdx[id];
   save();
+  if (!wasAll && allLogged()) flashAllDone();
+  checkMilestones();
   render();
 };
 
-// Journal deletions confirm first — Bloupunt already treats removing a habit as a
-// two-step, and an entry someone wrote at 1am deserves at least that much.
-window.askRemoveJournal    = id => { jConfirm = id; render(); };
-window.cancelRemoveJournal = ()  => { jConfirm = null; render(); };
-window.doRemoveJournal     = id => {
-  data.journal = (data.journal||[]).filter(e => e.id !== id);
-  data.jgone[id] = Date.now();                       // tombstone, or sync resurrects it
+// Deleting an entry confirms first. Removing a habit is already a two-step here, and
+// something written at 1am deserves at least that much.
+window.jAsk    = eid => { jConfirm = eid; render(); };
+window.jCancel = ()  => { jConfirm = null; render(); };
+window.jRemove = (id, eid) => {
+  const h = data.cards.find(c => c.id === id);
+  if (!h) return;
+  const e = (h.entries||[]).find(x => x.id === eid);
+  h.entries = (h.entries||[]).filter(x => x.id !== eid);
+  h.gone = h.gone || {};
+  h.gone[eid] = Date.now();              // tombstone, or the next sync resurrects it
+  // The day keeps its log only while an entry from that day survives. Otherwise a
+  // deleted-to-empty day would keep scoring for writing that no longer exists.
+  if (e && !(h.entries||[]).some(x => x.date === e.date)) delete h.days[e.date];
+  h.mAt = Date.now();
   jConfirm = null;
   save();
   render();
 };
 
-/* ── History: the mood trace, then every day in full ── */
+/* ── Talk ── */
 
-/* Hand-rolled SVG rather than a chart library — the whole app is one file with no
-   build step, and this is a single series over a fixed 30-day window. Drawn in a
-   0..300 x 0..100 viewBox and scaled by CSS, so it is resolution-independent. */
+// The transcript syncs with everything else, so it is capped: the companion only reads
+// the last dozen turns anyway, and an unbounded chat log would bloat the encrypted blob
+// for no benefit.
+const CHAT_KEEP = 60;
+
+function talkRow(h){
+  const open = expanded === h.id;
+  const draft = drafts[h.id] || '';
+  const log = h.chat || [];
+
+  if (!sync.aiProxy){
+    return panelShell(h,
+      '<p class="jHint" style="line-height:1.65;margin:0">The companion needs an endpoint '+
+      'before it can answer. A key placed in this file would be readable by anyone who '+
+      'opens the page, so the request has to go through a URL you host. Set it under '+
+      '<b>Manage → Manage sync</b>.</p>');
+  }
+
+  // Collapsed shows the tail of the conversation; expanded shows all of it.
+  const shown = open ? log : log.slice(-2);
+  const bubbles = shown.map(m =>
+    '<div class="bWrap '+(m.role==='user'?'me':'it')+'"><div class="bubble">'+
+      esc(m.content)+'</div></div>').join('');
+
+  const body =
+    (log.length ? '<div class="chat">'+bubbles+
+        (chatBusy ? '<p class="jHint">thinking…</p>' : '')+
+        (chatErr ? '<p class="chatErr">'+esc(chatErr)+'</p>' : '')+
+      '</div>'
+     : '<p class="jHint" style="line-height:1.6">It sees your recent moods and journal '+
+       'snippets, so you do not have to re-explain yourself. Start with whatever is '+
+       'actually on your mind.</p>')+
+    '<div class="composer">'+
+      '<textarea class="cInput" rows="1" placeholder="What is going on?" '+
+        'oninput="jType('+h.id+',this.value)">'+esc(draft)+'</textarea>'+
+      '<button class="btnP" onclick="sendChat('+h.id+')"'+
+        (draft.trim() && !chatBusy ? '' : ' disabled')+'>Send</button>'+
+    '</div>';
+
+  return panelShell(h, body);
+}
+
+function companionContext(){
+  const mood = data.cards.find(isMood);
+  const moods = mood
+    ? Object.keys(mood.days).sort().slice(-7).map(k =>
+        k+': '+mood.days[k]+'/10'+((mood.notes||{})[k] ? ' — '+mood.notes[k] : '')
+      ).join('\n') || 'none logged'
+    : 'no mood card';
+  const jc = data.cards.filter(isJournal);
+  const j = jc.flatMap(c => (c.entries||[]).slice(0,2))
+    .map(e => e.date+': '+e.text.slice(0,220)).join('\n---\n') || 'none';
+  const hs = data.cards.filter(isHabitType).map(c => c.name).join(', ') || 'none set';
+  return 'Recent context (today is '+todayKey()+'):\nMood, last entries:\n'+moods+
+         '\n\nLatest journal snippets:\n'+j+'\n\nHabits being tracked: '+hs;
+}
+
+window.sendChat = async id => {
+  const h = data.cards.find(c => c.id === id);
+  if (!h) return;
+  const msg = (drafts[id]||'').trim();
+  if (!msg || chatBusy) return;
+  const k = todayKey(), wasAll = allLogged();
+  h.chat = (h.chat || []).concat([{ role:'user', content: msg }]).slice(-CHAT_KEEP);
+  h.days[k] = 1;                    // talking to it is the log, reply or no reply
+  h.mAt = Date.now();
+  delete drafts[id];
+  chatErr = null; chatBusy = true;
+  // The turn is persisted BEFORE the request. The original only saved on a successful
+  // reply, so a message that failed to send vanished on reload.
+  save();
+  if (!wasAll && allLogged()) flashAllDone();
+  render();
+  try {
+    const res = await fetch(sync.aiProxy, {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ context: companionContext(), messages: h.chat.slice(-12) })
+    });
+    // Status is checked before the body. A 401 or 429 used to fall through to a generic
+    // "check your connection", which pointed at entirely the wrong problem.
+    if (!res.ok){
+      chatErr = res.status === 401 ? 'The endpoint rejected the request — check its API key.'
+              : res.status === 429 ? 'Rate limited. Give it a minute.'
+              : 'The endpoint returned '+res.status+'.';
+    } else {
+      const j = await res.json();
+      const text = (j && (j.text || j.content)) ? String(j.text || j.content).trim() : '';
+      if (!text) chatErr = 'The endpoint replied with nothing.';
+      else h.chat = h.chat.concat([{ role:'assistant', content: text }]).slice(-CHAT_KEEP);
+    }
+  } catch(e){
+    chatErr = 'Could not reach the companion endpoint.';
+  }
+  chatBusy = false;
+  h.mAt = Date.now();
+  save(false);                      // the reply is not a user action of its own
+  render();
+};
+
+/* Hand-rolled SVG rather than a chart library — the whole app is one file with no build
+   step, and this is a single series over a fixed window. Drawn in a 0..300 x 0..100
+   viewBox and scaled by CSS, so it stays sharp at any width. */
 function moodChart(days){
-  const pts = days.map((d,i) => ({ x: i*(300/29), y: d.score==null ? null : 100 - ((d.score-1)/9)*88 - 6, s: d.score }));
-  const on  = pts.filter(p => p.y !== null);
+  const pts = days.map((d,i) => ({ x: i*(300/(days.length-1)),
+    y: d.score==null ? null : 100 - ((d.score-1)/9)*88 - 6, s: d.score }));
+  const on = pts.filter(p => p.y !== null);
   if (on.length < 2) return '';
 
-  // connectNulls: an unlogged day is a gap in the record, not a zero. The line spans
-  // it and the dot is simply absent, so a missed day never reads as a bad day.
+  // The line spans an unlogged day rather than dropping to zero. A day you did not log
+  // is an absence of information, not a bad day, and must never be drawn as one.
   const path = on.map((p,i) => (i?'L':'M')+p.x.toFixed(1)+' '+p.y.toFixed(1)).join(' ');
   const area = path+' L'+on[on.length-1].x.toFixed(1)+' 100 L'+on[0].x.toFixed(1)+' 100 Z';
   const vals = on.map(p => p.s);
-  const avg  = vals.reduce((a,b)=>a+b,0)/vals.length;
-  const avgY = 100 - ((avg-1)/9)*88 - 6;
+  const avgY = 100 - (((vals.reduce((a,b)=>a+b,0)/vals.length)-1)/9)*88 - 6;
 
   return '<svg class="chart" viewBox="0 0 300 100" preserveAspectRatio="none" aria-hidden="true">'+
     '<defs><linearGradient id="mg" x1="0" y1="0" x2="0" y2="1">'+
@@ -2836,173 +3166,71 @@ function moodChart(days){
       'stroke="var(--amber)" stroke-width="0.7" stroke-dasharray="3 3"/>'+
     '<path d="'+path+'" fill="none" stroke="var(--sageDeep)" stroke-width="1.4" '+
       'stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke"/>'+
-    on.map(p => '<circle cx="'+p.x.toFixed(1)+'" cy="'+p.y.toFixed(1)+'" r="1.6" fill="var(--sageDeep)"/>').join('')+
+    on.map(p => '<circle cx="'+p.x.toFixed(1)+'" cy="'+p.y.toFixed(1)+'" r="1.6" '+
+      'fill="var(--sageDeep)"/>').join('')+
   '</svg>';
 }
 
-function historyScreen(){
-  const days = windowDays(30).map(d => {
-    const k = keyFor(d);
-    return { key:k, score: data.mood[k] ? data.mood[k].score : null };
-  });
-  const logged = days.filter(d => d.score != null);
-  const avg = logged.length ? (logged.reduce((a,b)=>a+b.score,0)/logged.length).toFixed(1) : null;
 
-  const trace = logged.length < 2
-    ? '<div class="row"><p class="jHint">The trace draws itself once you have two check-ins. '+
-      'Log a mood on Today to start it.</p></div>'
-    : '<div class="row">'+
-        '<div class="statRow">'+
-          '<div><div class="statLbl">AVG</div><div class="statVal serif sage">'+avg+'</div></div>'+
-          '<div><div class="statLbl">LOGGED</div><div class="statVal serif">'+logged.length+'/30</div></div>'+
-        '</div>'+
-        moodChart(days)+
-        '<div class="chartAx"><span>'+fmtKeyS(days[0].key)+'</span>'+
-          '<span>'+fmtKeyS(days[29].key)+'</span></div>'+
-        '<p class="jHint" style="margin-top:10px">Dashed line is your 30-day average. '+
-          'Gaps are unlogged days.</p>'+
-      '</div>';
+/* ── Shared logging helpers ──
+   Same "everything recorded today" test the habit toggle uses, factored out because
+   four call sites now need it rather than one. Inert cards are excluded: a card you
+   cannot log must never be the reason a clean day fails to register. */
+function allLogged(){
+  const live = data.cards.filter(c => !isInert(c));
+  return live.length > 0 && live.every(c => has(c.days, todayKey()));
+}
+function flashAllDone(){
+  if (data.cards.length <= 1) return;
+  flash = true;
+  setTimeout(() => { flash = false; render(); }, 1400);
+}
 
-  /* One card per day, merging all three records. This is the idea the original app got
-     right: a score means little next to a note, a tick and what she wrote that evening. */
-  const keys = new Set([
-    ...Object.keys(data.mood||{}),
-    ...(data.journal||[]).map(e => e.date)
-  ]);
-  for (const h of (data.habits||[])) for (const k of Object.keys(h.days||{})) keys.add(k);
+/* ── Each card's own history ──
+   Tapping a day in the month grid opens that day through the same dayChip the habit
+   types use. For a habit the chip is a control; for these it is the archive — the note
+   written that evening, the entries filed that day, the conversation you had. */
+function panelDayDetail(h, k){
+  if (isMood(h)){
+    const logged = h.days[k] !== undefined;
+    const note = (h.notes||{})[k];
+    if (!logged && !note) return '<span class="chipEmpty">Nothing logged.</span>';
+    return '<div class="chipRead">'+
+      (logged ? '<div class="chipScore" style="color:'+(h.days[k]<=4?'var(--clay)':'var(--sageDeep)')+'">'+
+        h.days[k]+'/10 · '+moodWord(h.days[k])+'</div>' : '')+
+      (note ? '<p class="jBody" style="margin-top:6px">'+esc(note)+'</p>' : '')+
+      '<button class="chipBtn clear" onclick="clearDay('+h.id+',\''+k+'\')">Clear this day</button>'+
+    '</div>';
+  }
 
-  const log = [...keys].sort().reverse().map(k => {
-    const m = data.mood[k];
-    const ticked = (data.habits||[]).filter(h => !isScore(h) && has(h.days||{}, k));
-    const entries = (data.journal||[]).filter(e => e.date === k);
-    return '<div class="row">'+
-      '<div class="jTop">'+
-        '<span class="jDate">'+fmtKey(k)+'</span>'+
-        (m ? '<span class="moodVal" style="color:'+(m.score<=4?'var(--clay)':'var(--sageDeep)')+'">'+
-             m.score+'/10 · '+moodWord(m.score)+'</span>' : '')+
-      '</div>'+
-      (m && m.note ? '<p class="jBody">'+esc(m.note)+'</p>' : '')+
-      (ticked.length ? '<p class="dayTicks">'+ticked.map(h => '✓ '+esc(h.name)).join(' · ')+'</p>' : '')+
-      entries.map(e => '<div class="dayEntry">'+
+  if (isJournal(h)){
+    const es = (h.entries||[]).filter(e => e.date === k);
+    if (!es.length) return '<span class="chipEmpty">Nothing written.</span>';
+    return '<div class="chipRead">'+es.map(e =>
+      '<div class="jEntry">'+
         (e.prompt ? '<p class="serif jEntryPrompt">'+esc(e.prompt)+'</p>' : '')+
         '<p class="jBody">'+esc(e.text)+'</p>'+
-      '</div>').join('')+
+        (jConfirm === e.id
+          ? '<span class="jConfirm">Delete? '+
+              '<button class="link red" onclick="jRemove('+h.id+','+e.id+')">Yes</button>'+
+              '<button class="link" onclick="jCancel()">Keep</button></span>'
+          : '<button class="link" onclick="jAsk('+e.id+')">delete</button>')+
+      '</div>').join('')+'</div>';
+  }
+
+  if (isTalk(h)){
+    // The transcript is capped and carries no per-message date, so a day can be marked
+    // logged while its messages have already rolled out of the window. Say so plainly
+    // rather than rendering an empty box that looks like a bug.
+    const has_ = h.days[k] !== undefined;
+    if (!has_) return '<span class="chipEmpty">No conversation.</span>';
+    return '<div class="chipRead"><span class="chipEmpty">You talked to it on this day. '+
+      'Only the most recent '+CHAT_KEEP+' messages are kept, so older exchanges are '+
+      'not stored.</span>'+
+      '<button class="chipBtn clear" onclick="clearDay('+h.id+',\''+k+'\')">Clear this day</button>'+
     '</div>';
-  }).join('');
-
-  return '<div class="stack">'+trace+
-    (log ? '<h2 class="secHead serif">Day by day</h2>'+log
-         : '<p class="cap">Once you log something, every day shows up here in full.</p>')+
-  '</div>';
-}
-
-/* ── Companion ──
-   The original called api.anthropic.com straight from the page with no key, so it
-   401'd on every send. A key cannot live in a file served from GitHub Pages — anyone
-   who opens devtools has it — so the request goes to a proxy endpoint you host, which
-   holds the key server-side. Until that URL is set the tab says so plainly rather than
-   failing with a misleading "check your connection". */
-function talkScreen(){
-  if (!sync.aiProxy){
-    return '<div class="stack"><div class="row">'+
-      '<p class="serif jPrompt" style="color:var(--ink)">The companion needs somewhere to live.</p>'+
-      '<p class="jHint" style="margin-top:8px;line-height:1.65">This page is a static file. '+
-        'An API key placed in it would be readable by anyone who opens the page, so the '+
-        'request has to go through a small endpoint you control that holds the key instead.'+
-      '</p>'+
-      '<p class="jHint" style="margin-top:10px;line-height:1.65">Set that endpoint under '+
-        '<b>Manage → Sync settings → Companion endpoint</b>. It should accept '+
-        '<code>{messages}</code> and return <code>{text}</code>.</p>'+
-    '</div></div>';
   }
-
-  const bubbles = chat.map(m =>
-    '<div class="bWrap '+(m.role==='user'?'me':'it')+'"><div class="bubble">'+esc(m.content)+'</div></div>'
-  ).join('');
-
-  return '<div class="stack talkWrap">'+
-    (chat.length ? '' :
-      '<div class="row"><p class="jHint" style="line-height:1.65">This companion sees your '+
-      'recent moods and journal snippets, so you do not have to re-explain yourself. It asks '+
-      'questions rather than hands out advice. Start with whatever is actually on your mind.</p></div>')+
-    '<div class="chat">'+bubbles+
-      (chatBusy ? '<p class="jHint">thinking…</p>' : '')+
-      (chatErr ? '<p class="chatErr">'+esc(chatErr)+'</p>' : '')+
-    '</div>'+
-    '<div class="composer">'+
-      '<textarea class="cInput" rows="1" placeholder="What is going on?" '+
-        'oninput="chatType(this.value)">'+esc(chatDraft)+'</textarea>'+
-      '<button class="btnP" onclick="sendChat()"'+(chatDraft.trim()&&!chatBusy?'':' disabled')+
-        '>Send</button>'+
-    '</div>'+
-  '</div>';
-}
-
-window.chatType = v => {
-  const was = !!chatDraft.trim(), now = !!v.trim();
-  chatDraft = v;
-  if (was !== now){ const b = document.querySelector('.composer .btnP'); if (b) b.disabled = !now || !!chatBusy; }
-};
-
-function companionContext(){
-  const ks = Object.keys(data.mood||{}).sort().slice(-7);
-  const moods = ks.map(k => k+': '+data.mood[k].score+'/10'+
-    (data.mood[k].note ? ' — '+data.mood[k].note : '')).join('\n') || 'none logged';
-  const j = (data.journal||[]).slice(0,2).map(e => e.date+': '+e.text.slice(0,220)).join('\n---\n') || 'none';
-  const hs = (data.habits||[]).filter(h => !isScore(h)).map(h => h.name).join(', ') || 'none set';
-  return 'Recent context (today is '+todayKey()+'):\nMood, last entries:\n'+moods+
-         '\n\nLatest journal snippets:\n'+j+'\n\nHabits being tracked: '+hs;
-}
-
-window.sendChat = async () => {
-  const msg = chatDraft.trim();
-  if (!msg || chatBusy) return;
-  chat.push({ role:'user', content: msg });
-  chatDraft = ''; chatErr = null; chatBusy = 'sending';
-  // Persist the user's turn before the request, not after. The original only saved on a
-  // successful reply, so a message that failed to send vanished on reload.
-  try { localStorage.setItem('grondpad-chat', JSON.stringify(chat)); } catch(e){}
-  render();
-  try {
-    const res = await fetch(sync.aiProxy, {
-      method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({ context: companionContext(), messages: chat.slice(-12) })
-    });
-    // Status is checked before the body — a 401 or 429 used to fall through to the
-    // generic "check your connection", which pointed at the wrong problem entirely.
-    if (!res.ok){
-      chatErr = res.status === 401 ? 'The endpoint rejected the request — check its API key.'
-              : res.status === 429 ? 'Rate limited. Give it a minute.'
-              : 'The endpoint returned '+res.status+'.';
-    } else {
-      const j = await res.json();
-      const text = (j && (j.text || j.content)) ? String(j.text || j.content).trim() : '';
-      if (!text) chatErr = 'The endpoint replied with nothing.';
-      else chat.push({ role:'assistant', content: text });
-    }
-  } catch(e){
-    chatErr = 'Could not reach the companion endpoint.';
-  }
-  chatBusy = null;
-  try { localStorage.setItem('grondpad-chat', JSON.stringify(chat)); } catch(e){}
-  render();
-};
-
-/* ── Bottom navigation ──
-   Four tabs is the ceiling at 375px once the labels are legible. Habit management stays
-   where Bloupunt put it — behind Manage in the header — rather than taking a fifth slot. */
-const TABS = [
-  { id:'today',   label:'Today'   },
-  { id:'journal', label:'Journal' },
-  { id:'history', label:'History' },
-  { id:'talk',    label:'Talk'    }
-];
-
-function bottomNav(){
-  const here = screen === 'manage' ? 'today' : screen;
-  return '<nav class="tabs">'+TABS.map(t =>
-    '<button class="tab'+(t.id===here?' on':'')+'" onclick="setScreen(\''+t.id+'\')"'+
-      (t.id===here?' aria-current="page"':'')+'>'+t.label+'</button>').join('')+'</nav>';
+  return '';
 }
 
 function render(){
@@ -3014,22 +3242,17 @@ function render(){
   if (meta) meta.setAttribute('content', tier.bg);
 
   const today = todayKey();
-  const habits = data.habits.filter(h => !isScore(h));    // the score is not a habit you complete
-  const chain = habits.filter(h => !isCounter(h));        // toggles only, for the ~3-habit cap
+  const habits = data.cards.filter(h => !isInert(h));    // everything you can actually log
+  // The ~3 cap is advice about HABITS — too many chains to hold at once. It has nothing
+  // to say about a mood scale or a journal, so those are excluded from the count.
+  const chain = data.cards.filter(isToggle);
   const doneCount = habits.filter(h => has(h.days, today)).length;
   const allDone = habits.length > 0 && doneCount === habits.length;
   const p = perfectStreak();
 
-  const jn = (data.journal||[]).length;
-  const loggedMoods = Object.keys(data.mood||{}).length;
-
-  const TITLES = { today:'Today', journal:'Journal', history:'History',
-                   talk:'Talk', manage:'Your habits' };
+  const TITLES = { today:'Today', manage:'Your cards' };
   const subtitle =
-      screen === 'journal' ? (jn ? jn+' entr'+(jn===1?'y':'ies') : 'Nothing written yet')
-    : screen === 'history' ? (loggedMoods ? 'Everything you have logged' : 'Nothing logged yet')
-    : screen === 'talk'    ? 'Reflection, not therapy'
-    : screen === 'manage'  ? 'Set the cue, the anchor, and the floor'
+      screen === 'manage'  ? 'Arrange them, or change how they work'
     : (habits.length === 0 ? 'Nothing set up yet'
       : allDone ? (p >= 7 ? p+' clean days' : 'All recorded')
       : doneCount+' of '+habits.length+' recorded');
@@ -3037,36 +3260,31 @@ function render(){
   let body;
 
   if (screen === 'today'){
-    // Mood sits above the habits: the check-in is the thing that frames the day, and
-    // the habit rows are long enough that a card below them would rarely get scrolled to.
-    body = moodCard() + (!data.habits.length
+    // One stack, in the user's own order. A mood scale, a journal, the day score and
+    // four habits are all just cards here — the whole app is whatever they arranged.
+    body = !data.cards.length
       ? '<div class="empty">'+
           '<p class="serif" style="font-size:17px;margin-bottom:8px">Start with one or two.</p>'+
           '<p style="font-size:13px;color:var(--soft);margin-bottom:22px;line-height:1.6">'+
-            'More than that and the chain breaks<br>before it has a chance to form.</p>'+
-          '<button class="btnP" onclick="openNew()">Add a habit</button>'+
+            'A mood scale, a journal, a habit to keep.<br>You can always add more later.</p>'+
+          '<button class="btnP" onclick="openNew()">Add a card</button>'+
         '</div>'
-      : '<div class="stack" style="margin-top:12px">'+
-          data.habits.map(habitRow).join('')+
-          (chain.length < 4
-            ? '<button class="btnDash" onclick="openNew()">+ Add a habit</button>' : '')+
-        '</div>');
-  } else if (screen === 'journal'){
-    body = journalScreen();
-  } else if (screen === 'history'){
-    body = historyScreen();
-  } else if (screen === 'talk'){
-    body = talkScreen();
+      : '<div class="stack">'+
+          data.cards.map(cardRow).join('')+
+          // Always offered. Hiding it past four habits would also block adding a
+          // journal, and the cap is a nudge about chains, not a limit on the app.
+          '<button class="btnDash" onclick="openNew()">+ Add a card</button>'+
+        '</div>';
   } else {
-    const cards = data.habits.map(h => {
-      if (editing === h.id) return editorHTML('Edit habit');
+    const cards = data.cards.map(h => {
+      if (editing === h.id) return editorHTML('Edit card');
       if (confirm === h.id) return '<div class="mCard danger" style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">'+
         '<span style="flex:1;font-size:13px;color:var(--soft);min-width:150px">Remove \u201c'+esc(h.name)+'\u201d and its history?</span>'+
         '<button class="btnRed" onclick="doRemove('+h.id+')">Remove</button>'+
         '<button class="btnG" style="padding:8px 16px;font-size:13px" onclick="cancelRemove()">Keep</button>'+
       '</div>';
-      const i = data.habits.indexOf(h), last = data.habits.length - 1;
-      const reorder = data.habits.length > 1
+      const i = data.cards.indexOf(h), last = data.cards.length - 1;
+      const reorder = data.cards.length > 1
         ? '<div class="ord">'+
             '<button class="ordBtn" aria-label="Move '+esc(h.name)+' up" '+(i===0?'disabled':'')+
               ' onclick="moveHabit('+h.id+',-1)">↑</button>'+
@@ -3076,12 +3294,16 @@ function render(){
       return '<div class="mCard"><div class="mTop">'+
         reorder +
         '<div style="flex:1;min-width:0">'+
-          '<div style="font-size:16px;font-weight:500;margin-bottom:'+((h.cue||h.minimum||isCounter(h)||isScore(h))?'5px':'0')+'">'+esc(h.name)+'</div>'+
+          '<div style="font-size:16px;font-weight:500;margin-bottom:'+((h.cue||h.minimum||!isToggle(h))?'5px':'0')+'">'+esc(h.name)+'</div>'+
           (h.cue     ? '<div class="mMeta">'+esc(h.cue)+'</div>' : '')+
           (h.minimum ? '<div class="mMeta">Floor: '+esc(h.minimum)+'</div>' : '')+
           (isCounter(h)||isTime(h) ? '<div class="mMeta">'+typeLabel(h.type)+(isDown(h)?' · lower is better':'')+'</div>' : '')+
-          (isScore(h) ? '<div class="mMeta">Day score · computed from your habits</div>' : '')+
-          (!h.cue && !isCounter(h) && !isScore(h) && !isTime(h) ? '<div class="mWarn">No cue set</div>' : '')+
+          (isScore(h)   ? '<div class="mMeta">Day score · computed from your cards</div>' : '')+
+          (isPanel(h)   ? '<div class="mMeta">'+typeLabel(h.type)+'</div>' : '')+
+          // The missing-cue nudge is advice about habit design. It means nothing on a
+          // mood scale or a journal, so it only shows on cards you actually tick.
+          (!h.cue && isHabitType(h) && !isCounter(h) && !isTime(h)
+            ? '<div class="mWarn">No cue set</div>' : '')+
         '</div>'+
         '<button class="link" onclick="openEdit('+h.id+')">Edit</button>'+
         '<button class="link red" onclick="askRemove('+h.id+')">Remove</button>'+
@@ -3089,11 +3311,11 @@ function render(){
     }).join('');
 
     const adder = editing === 'new'
-      ? editorHTML('New habit')
-      : '<button class="btnDash" onclick="openNew()">+ Add a habit</button>';
+      ? editorHTML('New card')
+      : '<button class="btnDash" onclick="openNew()">+ Add a card</button>';
 
-    const cap = (data.habits.length >= 3 && !editing)
-      ? '<p class="cap">Three is plenty. Adding more is usually how the chain gets dropped.</p>' : '';
+    const cap = (data.cards.filter(isToggle).length >= 3 && !editing)
+      ? '<p class="cap">Three habits is plenty. Adding more is usually how the chain gets dropped.</p>' : '';
 
     body = '<div class="stack">'+ cards + adder + cap +'</div>'+ syncPanel();
   }
@@ -3106,11 +3328,9 @@ function render(){
         '<p class="sub">'+subtitle+'</p>'+
       '</div>'+
       '<div class="navGrp">'+
-        // Pause and Manage act on habits, so they only appear where habits are.
         (screen==='today' ? '<button class="navBtn" onclick="togglePause()">Pause</button>' : '')+
-        (screen==='today' || screen==='manage'
-          ? '<button class="navBtn" onclick="setScreen(\''+(screen==='today'?'manage':'today')+'\')">'+
-            (screen==='today'?'Manage':'Done')+'</button>' : '')+
+        '<button class="navBtn" onclick="setScreen(\''+(screen==='today'?'manage':'today')+'\')">'+
+          (screen==='today'?'Manage':'Done')+'</button>'+
         '<button class="navBtn iconBtn" onclick="undo()"'+(undoStack.length?'':' disabled')+
           ' aria-label="Undo last change" title="Undo">'+UNDO_SVG+'</button>'+
         '<button id="sBtn" class="navBtn iconBtn sBtn '+syncTone()+'" onclick="syncTap()" '+
@@ -3123,8 +3343,7 @@ function render(){
     body +
     (swVersion ? '<p class="build">'+esc(swVersion)+'</p>' : '')+
     (flash ? '<div class="breath" aria-hidden="true"></div>' : '')+
-    celebrationHTML()+
-    bottomNav();
+    celebrationHTML();
 
   const f = document.getElementById('fName');
   if (f && !f.value) f.focus();
