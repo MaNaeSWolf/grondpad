@@ -1,75 +1,90 @@
 # Grondpad
 
-A private daily check-in app — mood tracking, habits, a prompted journal, and a
-reflection companion. Single-screen, phone-width, local-first.
-
-Five tabs:
+A private daily check-in app: mood, habits, a prompted journal, a merged history, and a
+reflection companion. Single-file HTML PWA — no build step, no dependencies, no server.
+Runs from a phone home screen and syncs an encrypted blob to a private GitHub repo.
 
 | Tab | What it does |
 | --- | --- |
-| **Today** | 1–10 mood slider with an optional one-line note, plus habit ticks and streak counts |
+| **Today** | Mood check-in (1–10 plus a note), then the habit rows with streaks |
 | **Journal** | Free writing, or one of twelve rotating reflection prompts |
-| **History** | 30-day mood chart with a running average, and a full day-by-day log |
-| **Habits** | Add and remove habits; 14-day consistency grid |
-| **Talk** | A reflection companion that reads recent moods and journal snippets for context |
+| **History** | 30-day mood trace, then every logged day in full — mood, ticks and entries on one card |
+| **Talk** | Reflection companion with recent context (needs an endpoint, see below) |
 
-## Credit
+Habit management lives behind **Manage** in the header, where Bloupunt put it, rather
+than taking a fifth tab slot.
 
-The application code (`src/App.jsx`) was written by **Cora**. This repo packages
-it as a runnable Vite project and is maintained by [@MaNaeSWolf](https://github.com/MaNaeSWolf).
-`App.jsx` is committed unmodified from the original.
+## Credit and provenance
 
-## Running it
+Grondpad began as a React component written by **Cora**, kept verbatim at
+[`reference/original-App.jsx`](reference/original-App.jsx). This version keeps her
+reflection layer — the mood scale, the prompts, the day-by-day merge, the companion
+brief — and rebuilds it on top of the habit engine, crypto and sync layer from
+[Bloupunt](https://github.com/MaNaeSWolf/bloupunt).
+
+**Bloupunt and Vasbyt are not modified by this project.** Bloupunt is in daily use;
+code was copied out of it, never back into it.
+
+## Architecture
+
+One file. `index.html` carries the markup, styles and all logic; `sw.js` is the service
+worker that makes a cold offline launch work. There is nothing to install and nothing to
+build — open the file and it runs.
+
+```
+index.html                 the whole app
+sw.js                      offline shell cache — bump VERSION when index.html changes
+reference/original-App.jsx Cora's original React component, unmodified
+```
+
+### Data
+
+Everything lives in one `grondpad-data` object in `localStorage`:
+
+| Key | Shape | Meaning |
+| --- | --- | --- |
+| `habits[]` | `{id, name, type, cue, days{}, mAt}` | Bloupunt's model, all six habit types |
+| `mood{}` | `dayKey -> {score, note, mAt}` | one check-in per day, editable |
+| `journal[]` | `{id, date, prompt, text, mAt}` | newest first |
+| `gone{}` / `jgone{}` | `id -> timestamp` | deletion tombstones |
+
+Every field rides the same encrypted blob and the same union merge, so a day written on
+the phone is never lost to a later write from the desktop. Where two devices genuinely
+disagree about one value, the newer `mAt` stamp wins.
+
+### Sync
+
+`localStorage` is the source of truth; sync is a non-blocking backup. The payload is
+AES-GCM encrypted with a PBKDF2-derived key (150k iterations, SHA-256) and PUT to a
+private data repo through the GitHub contents API. GitHub sees ciphertext only.
+
+Set it up per device under **Manage → Manage sync**: GitHub username, the private data
+repo, a fine-grained token scoped to *only* that repo with Contents read+write, and your
+passphrase. **The passphrase never leaves the device — lose it and the backup is
+unreadable.**
+
+The token cannot be hidden in a browser app. The blast radius is bounded instead: it is
+scoped to one private repo that contains nothing but ciphertext.
+
+## The companion
+
+The Talk tab is **off until you give it an endpoint**. The original called
+`api.anthropic.com` directly from the page, which 401'd on every send; a key placed in
+this file would be readable by anyone who opens the page, and it is served from GitHub
+Pages. So the request goes to a URL you host that holds the key server-side.
+
+Set it under **Manage → Manage sync → Companion endpoint**. It should accept
+`{context, messages}` and return `{text}`. Until then the tab explains itself rather
+than failing with a misleading connection error.
+
+## Local development
+
+No toolchain. Any static server works — a service worker needs `http://`, not `file://`:
 
 ```bash
-npm install
-npm run dev
+python -m http.server 8123 --directory .
 ```
 
-Then open the URL Vite prints (usually `http://localhost:5173`).
-
-## Project layout
-
-```
-src/App.jsx      Cora's component, unmodified
-src/storage.js   localStorage shim (see below)
-src/main.jsx     React entry point
-```
-
-### The storage shim
-
-`App.jsx` reads and writes through `window.storage.get(key)` / `.set(key, value)`,
-an API provided by the environment it was originally written for. `src/storage.js`
-installs a `localStorage`-backed version of that interface before React mounts, so
-the app runs in a normal browser without touching `App.jsx`.
-
-All data lives in the browser under the `grondpad-*` keys. Nothing is sent
-anywhere except the Talk tab's API call. Clearing site data wipes the record;
-there is no export yet.
-
-## Known issues
-
-Carried over from the original file, not yet fixed:
-
-- **The Talk tab does not work as written.** It `fetch`es `api.anthropic.com`
-  directly with no `x-api-key` and no `anthropic-version` header, so every
-  request 401s. Fixing it by adding the key client-side would ship that key to
-  every browser that loads the app — it needs a small server endpoint holding the
-  key instead. The request also sends its brief as a fake user/assistant exchange
-  rather than the `system` parameter.
-- **Failed writes are reported as successes.** `save()` returns `false` when
-  storage throws, and every caller ignores it — the mood button still reads
-  "Saved for today".
-- **A message that fails to send is not persisted** and disappears on reload.
-- **Crossing midnight with the app open** leaves yesterday's mood and note on
-  screen marked as saved for the new day.
-- **Deleting a habit orphans its tick history**, which then vanishes from the
-  grid and the day log.
-- **Journal entries delete without confirmation.**
-
-## Privacy
-
-This repo is private on purpose. `COMPANION_BRIEF` in `src/App.jsx` contains a
-personal profile — occupation, stated preferences, and self-described patterns.
-Replace it with a generic brief before making this repo public or sharing it
-outside the two of us.
+After editing `index.html`, **bump `VERSION` in `sw.js`**. That is the only signal the
+browser uses to install the new worker and re-cache the shell. Forget it and phones keep
+serving the old page.
