@@ -35,11 +35,14 @@ Card management — renaming, reordering, removing — lives behind **Manage** i
 
 ## Credit and provenance
 
-Grondpad began as a React component written by **Cora**, kept verbatim at
-[`reference/original-App.jsx`](reference/original-App.jsx). This version keeps her
-reflection layer — the mood scale, the prompts, the day-by-day merge, the companion
-brief — and rebuilds it on top of the habit engine, crypto and sync layer from
-[Bloupunt](https://github.com/MaNaeSWolf/bloupunt).
+Grondpad began as a React component written by **Cora**. This version keeps her
+reflection layer — the mood scale, the twelve prompts, the idea of merging a day's mood,
+ticks and writing into one record — and rebuilds it on top of the habit engine, crypto
+and sync layer from [Bloupunt](https://github.com/MaNaeSWolf/bloupunt).
+
+Her original is not in this repository. It contained a companion brief describing a real
+person in some detail, and this repo is public so that Pages can serve it. The file is
+kept privately by its authors.
 
 **Bloupunt and Vasbyt are not modified by this project.** Bloupunt is in daily use;
 code was copied out of it, never back into it.
@@ -51,9 +54,8 @@ worker that makes a cold offline launch work. There is nothing to install and no
 build — open the file and it runs.
 
 ```
-index.html                 the whole app
-sw.js                      offline shell cache — bump VERSION when index.html changes
-reference/original-App.jsx Cora's original React component, unmodified
+index.html   the whole app
+sw.js        offline shell cache — bump VERSION whenever index.html changes
 ```
 
 ### Data
